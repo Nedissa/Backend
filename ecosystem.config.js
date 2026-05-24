@@ -2,8 +2,8 @@ module.exports = {
   apps: [
     {
       name: 'medusa',
-      script: 'npm',
-      args: 'run dev',
+      script: 'npx',
+      args: 'medusa develop',
       cwd: '/opt/medusa-backend/apps/backend',
       instances: 1,
       autorestart: true,
