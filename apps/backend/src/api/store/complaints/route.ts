@@ -1,4 +1,5 @@
 import { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
+import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils"
 
 export const GET = async (
   req: MedusaRequest,
@@ -7,16 +8,16 @@ export const GET = async (
   const customerId = req.query.customer_id as string
 
   try {
-    const db = req.scope.resolve("db") as any
-    const complaints = await db.query.from("complaint").select(["*"]).where("customer_id", "=", customerId)
+    const customerModule = req.scope.resolve(Modules.CUSTOMER)
+    const customer = await customerModule.retrieveCustomer(customerId, {
+      select: ["id", "metadata"],
+    })
 
-    res.json({
-      complaints: complaints || [],
-    })
+    const complaints = (customer?.metadata?.complaints as any[]) || []
+    res.json({ complaints })
   } catch (error) {
-    res.status(500).json({
-      error: "Failed to fetch complaints",
-    })
+    console.error("GET /store/complaints error:", error)
+    res.json({ complaints: [] })
   }
 }
 
@@ -28,48 +29,37 @@ export const POST = async (
 
   if (!customer_id || !order_id || !description) {
     return res.status(400).json({
-      error: "customer_id, order_id, and description are required",
+      error: "customer_id, order_id och description krävs",
     })
   }
 
   try {
-    const db = req.scope.resolve("db") as any
+    const customerModule = req.scope.resolve(Modules.CUSTOMER)
 
-    // Get order number from orders table
-    const orders = await db.query.from("order").select(["display_id"]).where("id", "=", order_id)
-    const orderNumber = orders[0]?.display_id || order_id
+    const customer = await customerModule.retrieveCustomer(customer_id, {
+      select: ["id", "metadata"],
+    })
 
-    const complaintId = `complaint_${Math.random().toString(36).substr(2, 9)}`
-    const now = new Date()
+    const existingComplaints = (customer?.metadata?.complaints as any[]) || []
 
-    // Insert complaint
-    const result = await db.query.from("complaint").insert({
-      id: complaintId,
-      customer_id,
+    const newComplaint = {
+      id: `complaint_${Date.now()}`,
       order_id,
-      order_number: orderNumber,
       description,
       status: "open",
-      created_at: now,
-      updated_at: now,
-    })
+      created_at: new Date().toISOString(),
+    }
 
-    res.status(201).json({
-      complaint: {
-        id: complaintId,
-        customer_id,
-        order_id,
-        order_number: orderNumber,
-        description,
-        status: "open",
-        created_at: now,
-        updated_at: now,
+    await customerModule.updateCustomers(customer_id, {
+      metadata: {
+        ...customer.metadata,
+        complaints: [...existingComplaints, newComplaint],
       },
     })
+
+    res.status(201).json({ complaint: newComplaint })
   } catch (error) {
     console.error("POST /store/complaints error:", error)
-    res.status(500).json({
-      error: "Failed to save complaint",
-    })
+    res.status(500).json({ error: "Kunde inte spara felanmälan" })
   }
 }
