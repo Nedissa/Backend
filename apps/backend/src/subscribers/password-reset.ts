@@ -3,8 +3,10 @@ import nodemailer from "nodemailer"
 
 export default async function passwordResetHandler({
   event: { data },
-}: SubscriberArgs<{ email: string; token: string; url: string }>) {
-  const { email, token, url } = data
+}: SubscriberArgs<any>) {
+  const email = data?.email || data?.identifier || data?.entity_id
+  const token = data?.token
+  const url = data?.url
 
   const resetUrl = url || `${process.env.STORE_URL || "https://techpilots.vercel.app"}/aterstall-losenord?token=${token}`
 
