@@ -1,4 +1,5 @@
 import { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
+import { ContainerRegistrationKeys } from "@medusajs/framework/utils"
 
 export const GET = async (
   req: MedusaRequest,
@@ -7,16 +8,18 @@ export const GET = async (
   const customerId = req.query.customer_id as string
 
   try {
-    const db = req.scope.resolve("db") as any
-    const complaints = await db.query.from("complaint").select(["*"]).where("customer_id", "=", customerId)
+    const pgConnection = req.scope.resolve(ContainerRegistrationKeys.PG_CONNECTION)
 
-    res.json({
-      complaints: complaints || [],
-    })
+    let query = pgConnection("complaint").select("*").orderBy("created_at", "desc")
+    if (customerId) {
+      query = query.where("customer_id", customerId)
+    }
+
+    const complaints = await query
+    res.json({ complaints: complaints || [] })
   } catch (error) {
-    res.status(500).json({
-      error: "Failed to fetch complaints",
-    })
+    console.error("GET /admin/complaints error:", error)
+    res.status(500).json({ error: "Failed to fetch complaints" })
   }
 }
 
@@ -33,21 +36,15 @@ export const POST = async (
   }
 
   try {
-    const db = req.scope.resolve("db") as any
-
-    // Get order number from orders table
-    const orders = await db.query.from("order").select(["display_id"]).where("id", "=", order_id)
-    const orderNumber = orders[0]?.display_id || order_id
+    const pgConnection = req.scope.resolve(ContainerRegistrationKeys.PG_CONNECTION)
 
     const complaintId = `complaint_${Math.random().toString(36).substr(2, 9)}`
     const now = new Date()
 
-    // Insert complaint
-    const result = await db.query.from("complaint").insert({
+    await pgConnection("complaint").insert({
       id: complaintId,
       customer_id,
       order_id,
-      order_number: orderNumber,
       description,
       status: "open",
       created_at: now,
@@ -59,7 +56,6 @@ export const POST = async (
         id: complaintId,
         customer_id,
         order_id,
-        order_number: orderNumber,
         description,
         status: "open",
         created_at: now,
@@ -68,8 +64,6 @@ export const POST = async (
     })
   } catch (error) {
     console.error("POST /admin/complaints error:", error)
-    res.status(500).json({
-      error: "Failed to save complaint",
-    })
+    res.status(500).json({ error: "Failed to save complaint" })
   }
 }

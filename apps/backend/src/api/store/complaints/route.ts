@@ -1,4 +1,5 @@
 import { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
+import { ContainerRegistrationKeys } from "@medusajs/framework/utils"
 
 export const GET = async (
   req: MedusaRequest,
@@ -11,8 +12,14 @@ export const GET = async (
   }
 
   try {
-    const db = req.scope.resolve("db") as any
-    const complaints = await db.query.from("complaint").select(["*"]).where("customer_id", "=", customerId)
+    const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+    const pgConnection = req.scope.resolve(ContainerRegistrationKeys.PG_CONNECTION)
+
+    const complaints = await pgConnection("complaint")
+      .select("*")
+      .where("customer_id", customerId)
+      .orderBy("created_at", "desc")
+
     res.json({ complaints: complaints || [] })
   } catch (error) {
     console.error("GET /store/complaints error:", error)
@@ -33,12 +40,12 @@ export const POST = async (
   }
 
   try {
-    const db = req.scope.resolve("db") as any
+    const pgConnection = req.scope.resolve(ContainerRegistrationKeys.PG_CONNECTION)
 
     const complaintId = `complaint_${Math.random().toString(36).substr(2, 9)}`
     const now = new Date()
 
-    await db.query.from("complaint").insert({
+    await pgConnection("complaint").insert({
       id: complaintId,
       customer_id,
       order_id,
