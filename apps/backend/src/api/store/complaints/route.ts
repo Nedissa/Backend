@@ -1,5 +1,4 @@
 import { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
-import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils"
 
 export const GET = async (
   req: MedusaRequest,
@@ -7,14 +6,14 @@ export const GET = async (
 ) => {
   const customerId = req.query.customer_id as string
 
-  try {
-    const customerModule = req.scope.resolve(Modules.CUSTOMER)
-    const customer = await customerModule.retrieveCustomer(customerId, {
-      select: ["id", "metadata"],
-    })
+  if (!customerId) {
+    return res.json({ complaints: [] })
+  }
 
-    const complaints = (customer?.metadata?.complaints as any[]) || []
-    res.json({ complaints })
+  try {
+    const db = req.scope.resolve("db") as any
+    const complaints = await db.query.from("complaint").select(["*"]).where("customer_id", "=", customerId)
+    res.json({ complaints: complaints || [] })
   } catch (error) {
     console.error("GET /store/complaints error:", error)
     res.json({ complaints: [] })
@@ -34,30 +33,32 @@ export const POST = async (
   }
 
   try {
-    const customerModule = req.scope.resolve(Modules.CUSTOMER)
+    const db = req.scope.resolve("db") as any
 
-    const customer = await customerModule.retrieveCustomer(customer_id, {
-      select: ["id", "metadata"],
-    })
+    const complaintId = `complaint_${Math.random().toString(36).substr(2, 9)}`
+    const now = new Date()
 
-    const existingComplaints = (customer?.metadata?.complaints as any[]) || []
-
-    const newComplaint = {
-      id: `complaint_${Date.now()}`,
+    await db.query.from("complaint").insert({
+      id: complaintId,
+      customer_id,
       order_id,
       description,
       status: "open",
-      created_at: new Date().toISOString(),
-    }
-
-    await customerModule.updateCustomers(customer_id, {
-      metadata: {
-        ...customer.metadata,
-        complaints: [...existingComplaints, newComplaint],
-      },
+      created_at: now,
+      updated_at: now,
     })
 
-    res.status(201).json({ complaint: newComplaint })
+    res.status(201).json({
+      complaint: {
+        id: complaintId,
+        customer_id,
+        order_id,
+        description,
+        status: "open",
+        created_at: now,
+        updated_at: now,
+      },
+    })
   } catch (error) {
     console.error("POST /store/complaints error:", error)
     res.status(500).json({ error: "Kunde inte spara felanmälan" })
