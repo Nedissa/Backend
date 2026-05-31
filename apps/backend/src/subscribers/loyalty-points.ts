@@ -25,7 +25,7 @@ export default async function loyaltyPointsHandler({
     const metadata = (customer.metadata as any) || {}
     const existing = metadata.loyalty || {}
 
-    const earnedPoints = Math.floor(order.total / 5000) * 2 // 2 poäng per 100 kr (total är i ören)
+    const earnedPoints = Math.floor((order.total as number) / 5000) * 2
     const totalPoints = (existing.total_points || 0) + earnedPoints
     const lifetimeOrders = (existing.lifetime_orders || 0) + 1
     const lifetimeSpend = (existing.lifetime_spend || 0) + order.total
