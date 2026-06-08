@@ -20,5 +20,7 @@ jobs:
             cd /opt/medusa-backend
             git pull origin main
             npm install
+            cd apps/backend
             npm run build
-            pm2 restart medusa
+            cp .env .medusa/server/.env
+            pm2 restart medusa --update-env
