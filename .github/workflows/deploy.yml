@@ -23,4 +23,5 @@ jobs:
             cd apps/backend
             npm run build
             cp .env .medusa/server/.env
+            ln -sf /opt/medusa-backend/apps/backend/static /opt/medusa-backend/apps/backend/.medusa/server/static
             pm2 restart medusa --update-env
