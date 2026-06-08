@@ -20,4 +20,5 @@ jobs:
             cd /opt/medusa-backend
             git pull origin main
             npm install
-            npm start
+            npm run build
+            pm2 restart medusa
