@@ -1,5 +1,4 @@
 import { SubscriberArgs, SubscriberConfig } from "@medusajs/framework"
-import nodemailer from "nodemailer"
 
 export default async function passwordResetHandler({
   event: { data },
@@ -8,33 +7,39 @@ export default async function passwordResetHandler({
   const token = data?.token
   const url = data?.url
 
-  const resetUrl = url || `${process.env.STORE_URL || "https://techpilots.vercel.app"}/aterstall-losenord?token=${token}`
+  const resetUrl = url || `${process.env.STORE_URL || "https://techpilots.vercel.app"}/aterstall-losenord?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}`
 
-  const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST || "smtp.strato.com",
-    port: Number(process.env.SMTP_PORT) || 465,
-    secure: true,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  })
-
-  await transporter.sendMail({
-    from: `"Techpilots" <${process.env.SMTP_USER}>`,
-    to: email,
-    subject: "Återställ ditt lösenord",
-    html: `
-      <div style="font-family: -apple-system, sans-serif; max-width: 500px; margin: 0 auto; padding: 40px 20px;">
-        <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 8px;">Techpilots</h1>
-        <hr style="border: none; border-top: 1px solid #eee; margin-bottom: 32px;" />
-        <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 16px;">Återställ ditt lösenord</h2>
-        <p style="color: #555; margin-bottom: 24px;">Vi fick en begäran om att återställa lösenordet för ditt konto. Klicka på knappen nedan för att välja ett nytt lösenord.</p>
-        <a href="${resetUrl}" style="display: inline-block; background: #000; color: #fff; padding: 12px 24px; text-decoration: none; font-weight: bold; margin-bottom: 24px;">Återställ lösenord</a>
-        <p style="color: #999; font-size: 13px;">Länken är giltig i 24 timmar. Om du inte begärde detta kan du ignorera mailet.</p>
-        <p style="color: #999; font-size: 13px;">Om knappen inte fungerar, kopiera denna länk:<br/><a href="${resetUrl}" style="color: #000;">${resetUrl}</a></p>
+  const html = `
+    <div style="font-family:Inter,sans-serif;max-width:600px;margin:0 auto;background:#fff;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;">
+      <div style="background:#000;padding:24px 32px;">
+        <h1 style="color:#fff;margin:0;font-size:1.2rem;">Återställ ditt lösenord</h1>
       </div>
-    `,
+      <div style="padding:32px;">
+        <p style="font-size:0.95rem;color:#333;line-height:1.7;">Hej,</p>
+        <p style="font-size:0.95rem;color:#333;line-height:1.7;">Vi fick en begäran om att återställa lösenordet för ditt konto på Techpilots. Klicka på knappen nedan för att välja ett nytt lösenord.</p>
+        <div style="text-align:center;margin:32px 0;">
+          <a href="${resetUrl}" style="background:#000;color:#fff;padding:14px 32px;text-decoration:none;font-weight:700;font-size:0.95rem;border-radius:4px;">Återställ lösenord</a>
+        </div>
+        <p style="font-size:0.85rem;color:#888;line-height:1.7;">Länken är giltig i 24 timmar. Om du inte begärde detta kan du ignorera detta mail.</p>
+      </div>
+      <div style="background:#f5f5f5;padding:16px 32px;font-size:0.75rem;color:#888;">
+        Techpilots AB &bull; support@techpilots.se &bull; +46 10 880 09 81
+      </div>
+    </div>
+  `
+
+  await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "api-key": process.env.BREVO_API_KEY!,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      sender: { name: "Techpilots", email: "info@techpilots.se" },
+      to: [{ email }],
+      subject: "Återställ ditt lösenord - Techpilots",
+      htmlContent: html,
+    }),
   })
 }
 
