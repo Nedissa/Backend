@@ -42,7 +42,7 @@ export const POST = async (
   try {
     const pgConnection = req.scope.resolve(ContainerRegistrationKeys.PG_CONNECTION)
 
-    const complaintId = `complaint_${Math.random().toString(36).substr(2, 9)}`
+    const complaintId = `complaint_${require('crypto').randomUUID().replace(/-/g, '').slice(0, 16)}`
     const now = new Date()
 
     await pgConnection("complaint").insert({

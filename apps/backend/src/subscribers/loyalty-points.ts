@@ -48,8 +48,8 @@ export default async function loyaltyPointsHandler({
         },
       },
     })
-  } catch (error) {
-    console.error("loyalty-points subscriber error:", error)
+  } catch {
+    // silent fail — loyalty points are non-critical
   }
 }
 

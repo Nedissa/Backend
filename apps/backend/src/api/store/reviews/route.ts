@@ -20,8 +20,7 @@ export const GET = async (
       .orderBy("created_at", "desc")
 
     res.json({ reviews: reviews || [] })
-  } catch (error) {
-    console.error("GET /store/reviews error:", error)
+  } catch {
     res.json({ reviews: [] })
   }
 }
@@ -67,7 +66,7 @@ export const POST = async (
       // verified_purchase stays false if check fails
     }
 
-    const reviewId = `review_${Math.random().toString(36).substr(2, 9)}`
+    const reviewId = `review_${require('crypto').randomUUID().replace(/-/g, '').slice(0, 16)}`
     const now = new Date()
 
     await pgConnection("product_review").insert({
@@ -94,8 +93,7 @@ export const POST = async (
         created_at: now,
       },
     })
-  } catch (error) {
-    console.error("POST /store/reviews error:", error)
+  } catch {
     res.status(500).json({ error: "Kunde inte spara recensionen" })
   }
 }
