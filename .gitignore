@@ -1,0 +1,5 @@
+KEYS.md
+*.env.local
+.env
+.mcp.json
+*.log
