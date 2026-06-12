@@ -31,3 +31,4 @@ E-handelsplattform för teknikprodukter.
 - `KEYS.md` — var alla nycklar finns
 - `AUDIT.md` — felsökning och best practice
 - `.mcp.json` — MCP-konfiguration (ej i git)
+- `MARKETING.md` — marketing agent för Techpilots Webshop & Studio
