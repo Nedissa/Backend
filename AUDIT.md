@@ -580,7 +580,37 @@ pm2 logs payload --lines 100
 - [x] Säkerhetsaudit: HTML-escape i newsletter, tog bort env-läcka i products API
 - [x] Tog bort alla `console.error` i produktionskod
 
-### 11.2 MCP-setup 2026-06-10
+### 11.2 E-post & Brevo-integration 2026-06-13
+- [x] **Outlook-bug fixad** — `display:flex` stöds inte i Outlook. Ersatte alla flex-div-headers med `<table><tr><td>` i samtliga 6 mail-routes (`contact`, `complaints`, `newsletter`, `webhooks/stripe`, `auth/reset-password`, `lib/mailer.ts`)
+- [x] **XSS-skydd** — Lade till `esc()`-funktion i `contact/route.ts` och `complaints/route.ts`. All användarinput (namn, email, ämne, meddelande, orderId, beskrivning) HTML-escapas innan injektion i mailmallar
+- [x] **Webhook-resiliens** — Bytte `Promise.all` → `Promise.allSettled` i `webhooks/stripe/route.ts`. Stripe får alltid 200 OK även om Brevo eller Medusa-anropet misslyckas
+- [x] **Brevo Contacts kopplat** — Kunder sparas automatiskt till rätt Brevo-lista:
+  - Registrering (`lib/mailer.ts`) → Lista #5 (Registrerade kunder)
+  - Nyhetsbrev (`newsletter/route.ts`) → Lista #2 (Nyhetsbrev)
+- [x] **Nodemailer-route borttagen** — `src/api/store/send-reset-email/` kraschade Medusa-bygget med "Cannot find module 'nodemailer'". Raderad från VPS
+
+### 11.3 Stripe + Medusa-integration 2026-06-13
+- [x] **Medusa uppgraderat** — Alla `@medusajs/*`-paket uppgraderade från 2.14.2 → 2.15.5 med `--legacy-peer-deps`
+- [x] **Stripe payment plugin installerat** — `@medusajs/payment-stripe@2.15.5` installerat i backend
+- [x] **medusa-config.ts uppdaterat** — Bytte från `plugins`-format (Medusa v1) till `modules`-format (Medusa v2):
+  ```ts
+  modules: [{
+    resolve: '@medusajs/medusa/payment',
+    options: {
+      providers: [{
+        resolve: '@medusajs/payment-stripe',
+        id: 'stripe',
+        options: { apiKey: process.env.STRIPE_API_KEY, webhookSecret: process.env.STRIPE_WEBHOOK_SECRET }
+      }]
+    }
+  }]
+  ```
+- [x] **DB-migration körd** — `npx medusa db:migrate` efter uppgradering
+- [x] **`.env` kopieras till `.medusa/server/`** — Medusa-bygget rensar servermappen; `.env` måste kopieras dit efter varje build
+- [x] **Stripe aktiverat i Admin** — Settings → Regions → Sweden → Payment Providers → valde "Stripe (STRIPE)"
+- [ ] **Ordrar i Medusa** — `createMedusaOrder()` i `webhooks/stripe/route.ts` använder `POST /admin/orders` som inte finns i Medusa v2. Behöver skrivas om till cart-baserat flöde via Medusa store API
+
+### 11.4 MCP-setup 2026-06-10
 - [x] Installerade DBHub (PostgreSQL MCP) — Connected
 - [x] Installerade GitHub MCP — Connected
 - [x] Installerade Brevo MCP — Connected
