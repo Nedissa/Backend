@@ -18,5 +18,14 @@ module.exports = defineConfig({
   },
   admin: {
     backendUrl: process.env.MEDUSA_BACKEND_URL || 'https://api.techpilots.se',
-  }
+  },
+  modules: [
+    {
+      resolve: '@medusajs/payment-stripe',
+      options: {
+        api_key: process.env.STRIPE_API_KEY,
+        webhook_secret: process.env.STRIPE_WEBHOOK_SECRET,
+      },
+    },
+  ],
 })
