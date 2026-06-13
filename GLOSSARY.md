@@ -222,17 +222,29 @@
 | **Webhook (Stripe)** | Stripe meddelar er vid betalningshändelse | Automatiskt efter betalning | Synkroniserar Stripe och Medusa | Betalning lyckades → webhook → Medusa skapar order |
 | **Brevo** | Email-tjänst för transaktions- och kampanjmejl | Orderbekräftelse, leverans, nyhetsbrev | Professionell leverans med spårning | Automatiskt orderbekräftelsemejl via Brevo |
 | **Transaktionsmejl** | Automatiska mejl vid specifika händelser | Order, betalning, frakt | Håller kunden informerad automatiskt | "Din order #1234 är bekräftad" |
-| **Orderbekräftelse** | Mail till kund vid lyckad betalning | `webhooks/stripe` → `checkout.session.completed` | Kvitto och bekräftelse | Skickas direkt efter Stripe bekräftar |
-| **Ny order (intern)** | Mail till info@techpilots.se vid ny order | `webhooks/stripe` | Notis om inkommande order | Skickas samtidigt som orderbekräftelsen |
-| **Välkommen — ny kund** | Mail vid kontoregistrering | `lib/mailer.ts` → `sendWelcomeEmail()` | 10% rabatt på första köpet | Skickas direkt vid registrering |
-| **Återställ lösenord** | Mail med återställningslänk | `api/auth/reset-password` | Länk giltig i 24 timmar | Triggas av "Glömt lösenord" |
-| **Nyhetsbrev — välkommen** | Mail till kund vid nyhetsbrevs-anmälan | `api/newsletter` | Bekräftar prenumeration + 10% rabatt | Skickas direkt vid anmälan |
-| **Nyhetsbrev — notis (intern)** | Mail till info@techpilots.se vid nyhetsbrevs-anmälan | `api/newsletter` | Intern notis om ny prenumerant | Skickas samtidigt som välkomstmejlet |
-| **Kontaktformulär (intern)** | Mail till info@techpilots.se vid kontakt | `api/contact` | Vidarebefordrar kundens meddelande | Svar-till satt till kundens e-post |
-| **Felanmälan mottagen** | Mail till kund vid felanmälan | `api/complaints` | Bekräftar ärendenummer och svarstid | Triggas när kund skickar felanmälan på Mina sidor |
-| **Ny felanmälan (intern)** | Mail till info@techpilots.se vid felanmälan | `api/complaints` | Intern notis med kundinfo och beskrivning | Skickas samtidigt som kundbekräftelsen |
 | **Payload CMS** | Headless CMS för innehållshantering | Banners, texter, bilder | Redaktörer jobbar utan att involvera utvecklare | Uppdatera hero-banner inför kampanj |
 | **Headless CMS** | CMS utan inbyggt frontend | Payload CMS är er headless CMS | Fri hand att bygga vilket frontend som helst | Next.js hämtar banners från Payload via API |
+
+</details>
+
+---
+
+<details>
+<summary><strong>E-post — Webbshopen</strong></summary>
+
+Alla mail skickas via Brevo. Routes ligger i `app/api/`.
+
+| Mejl | Triggas när | Route |
+|---|---|---|
+| **Orderbekräftelse** | Lyckad betalning | `webhooks/stripe` |
+| **Ny order (intern)** | Lyckad betalning | `webhooks/stripe` |
+| **Välkommen — ny kund** | Kontoregistrering | `lib/mailer.ts` |
+| **Återställ lösenord** | Glömt lösenord | `api/auth/reset-password` |
+| **Nyhetsbrev — välkommen** | Nyhetsbrevs-anmälan | `api/newsletter` |
+| **Nyhetsbrev — notis (intern)** | Nyhetsbrevs-anmälan | `api/newsletter` |
+| **Kontaktformulär (intern)** | Kontaktformulär | `api/contact` |
+| **Felanmälan mottagen** | Felanmälan på Mina sidor | `api/complaints` |
+| **Ny felanmälan (intern)** | Felanmälan på Mina sidor | `api/complaints` |
 
 </details>
 
