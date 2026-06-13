@@ -609,6 +609,7 @@ pm2 logs payload --lines 100
 - [x] **`.env` kopieras till `.medusa/server/`** — Medusa-bygget rensar servermappen; `.env` måste kopieras dit efter varje build
 - [x] **Stripe aktiverat i Admin** — Settings → Regions → Sweden → Payment Providers → valde "Stripe (STRIPE)"
 - [ ] **Ordrar i Medusa** — `createMedusaOrder()` i `webhooks/stripe/route.ts` använder `POST /admin/orders` som inte finns i Medusa v2. Behöver skrivas om till cart-baserat flöde via Medusa store API
+- [x] **Produktbilder saknas efter build** — Medusa körs från `.medusa/server/` men bilder laddades upp till `apps/backend/static/`. Fix: skapade symlink `ln -s /opt/medusa-backend/apps/backend/static /opt/medusa-backend/apps/backend/.medusa/server/static`. Symlinken överlever framtida byggen.
 
 ### 11.4 MCP-setup 2026-06-10
 - [x] Installerade DBHub (PostgreSQL MCP) — Connected
