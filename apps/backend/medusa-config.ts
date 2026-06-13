@@ -19,13 +19,21 @@ module.exports = defineConfig({
   admin: {
     backendUrl: process.env.MEDUSA_BACKEND_URL || 'https://api.techpilots.se',
   },
-  plugins: [
-    {
-      resolve: '@medusajs/payment-stripe',
+  modules: {
+    paymentModuleService: {
+      resolve: '@medusajs/payment',
       options: {
-        api_key: process.env.STRIPE_API_KEY,
-        webhook_secret: process.env.STRIPE_WEBHOOK_SECRET,
+        providers: [
+          {
+            resolve: '@medusajs/payment-stripe',
+            id: 'stripe',
+            options: {
+              api_key: process.env.STRIPE_API_KEY,
+              webhook_secret: process.env.STRIPE_WEBHOOK_SECRET,
+            },
+          },
+        ],
       },
     },
-  ],
+  },
 })
