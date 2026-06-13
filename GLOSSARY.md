@@ -780,8 +780,16 @@ PowerShell används i **Windows-terminalen** lokalt.
 | **Store** | Era butiksinställningar | Under Settings → Store | Styr butiksnamn, valutor och standardregion | Butiksnamn: "Techpilots" |
 | **Currencies** | Vilka valutor butiken accepterar | Lägg till SEK här | Utan SEK kan inga SEK-priser sättas på varianter | Lägg till SEK → aktivera på Sweden-regionen |
 | **Users** | Admin-användare med tillgång till Medusa Admin | Under Settings → Team | Styr vem som kan ändra produkter och ordrar | Lägg till kollega som admin |
-| **API Keys** | Nycklar för att komma åt Medusa-APIet | Under Settings → API Keys | Frontendens publishable key och backendets secret key | `pk_...` används i Next.js-frontend |
-| **Publishable API Key** | Den publika nyckel frontend använder | Konfigureras i Settings | Identifierar er webshop mot Medusa API | Sätts som `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY` i Vercel |
+| **Tax Regions** | Separata skatteregler per land/region | Under Settings → Tax Regions | Finjustera moms per marknad oberoende av Regions | Sverige: 25% standard, 12% livsmedel |
+| **Return Reasons** | Förkonfigurerade anledningar kunden väljer vid retur | Under Settings → Return Reasons | Standardiserar returdata för statistik och hantering | "Defekt produkt", "Fel storlek", "Ångrat köp" |
+| **Refund Reasons** | Anledningar för manuell återbetalning av admin | Under Settings → Refund Reasons | Spårar varför ni återbetalar — viktigt för bokföring | "Kundservice-kompensation", "Försenad leverans" |
+| **Sales Channels** | Försäljningskanaler produkter kopplas till | Under Settings → Sales Channels | Produkt måste vara kopplad till en kanal för att synas | "Webstore" — koppla alla produkter hit |
+| **Product Types** | Kategorisering av produkttyp | Under Settings → Product Types | Gruppera produkter efter typ för filtrering och rapporter | "Grafikkort", "Processor", "Tillbehör" |
+| **Product Tags** | Friforma taggar på produkter | Under Settings → Product Tags | Flexibel märkning för sökning och kampanjer | "Nyhet", "Bästsäljare", "NVIDIA" |
+| **Locations & Shipping** | Lagerlokationer och fraktzoner | Under Settings → Locations & Shipping | Kopplar lager till regioner och fraktregler | "Borås-lagret" kopplat till Sverige-regionen |
+| **Publishable API Key** | Den publika nyckel frontend använder | Under Settings → Publishable API Keys | Identifierar er webshop mot Medusa API — säker att exponera | Sätts som `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY` i Vercel |
+| **Secret API Key** | Hemlig nyckel för server-till-server-anrop | Under Settings → Secret API Keys | Full åtkomst till Medusa — får aldrig exponeras i frontend | Används i backend-scripts och webhooks |
+| **Workflows** | Automatiserade flöden som triggas vid händelser | Under Settings → Workflows | Kör logik automatiskt utan kod — t.ex. vid order eller retur | Skicka Slack-notis när en ny order kommer in |
 
 </details>
 
