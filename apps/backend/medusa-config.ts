@@ -19,8 +19,8 @@ module.exports = defineConfig({
   admin: {
     backendUrl: process.env.MEDUSA_BACKEND_URL || 'https://api.techpilots.se',
   },
-  modules: {
-    paymentModuleService: {
+  modules: [
+    {
       resolve: '@medusajs/payment',
       options: {
         providers: [
@@ -35,5 +35,5 @@ module.exports = defineConfig({
         ],
       },
     },
-  },
+  ],
 })
