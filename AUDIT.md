@@ -226,6 +226,32 @@ Denna guide är avsedd att köras som en strukturerad genomgång av hela projekt
 
 ---
 
+## LÖSNINGAR & LÄRDOMAR
+
+### Checkout-flödet (Stripe + Medusa)
+
+**Problem:** Nästlade `<form>`-taggar orsakade page reload vid betalning.
+**Lösning:** Den yttre behållaren på kassasidan är en `<div>`, inte en `<form>`. Stripe's `PaymentForm` har sin egen `<form>` — dessa får aldrig nästlas.
+
+**Problem:** Stripe `confirmPayment` redirectade till `/kassan` istället för `/order-bekraftelse`.
+**Lösning:** Spara `cartId`, `formData` och `total` i `sessionStorage` innan `confirmPayment` anropas. `/order-bekraftelse` hämtar dessa och slutför ordern via `/api/medusa-checkout/confirm` när Stripe redirectar dit med `payment_intent` i URL:en.
+
+**Problem:** Ordermail förlorade logga och styling efter att vi bytte från webhook till confirm-route.
+**Lösning:** Kopiera full HTML-mall med logga, styled tabell och footer från webhook-routen till confirm-routen.
+
+**Problem:** `initPayment` anropades i oändlig loop (400-fel hundratals gånger).
+**Lösning:** Använd `hasInitPaymentRef = useRef(false)` som sätts till `true` direkt när `initPayment` anropas. Resettas bara vid faktiskt fel. Kombinera med guard på `formData.email` — initiera inte Stripe förrän e-post finns.
+
+**Problem:** `formDataRef` inte synkad när kunddata laddas async.
+**Lösning:** `useEffect(() => { formDataRef.current = formData; }, [formData])` håller ref alltid uppdaterad.
+
+**Problem:** Medusa läser `.env` från `.medusa/server/.env` (CWD), inte från `apps/backend/.env`.
+**Lösning:** Efter varje `medusa build` måste `.env` kopieras till `.medusa/server/.env`. Annars saknas Stripe-nycklar.
+
+**Princip:** Skicka alltid mail direkt från confirm-routen (synkront) — aldrig via Stripe webhooks (asynkront). Webhooks är komplexa att debugga och onödiga för ett enkelt bekräftelsemail.
+
+---
+
 ## HUR MAN KÖR AUDITEN
 
 ### Säkerhet — snabbkoll
@@ -608,10 +634,26 @@ pm2 logs payload --lines 100
 - [x] **DB-migration körd** — `npx medusa db:migrate` efter uppgradering
 - [x] **`.env` kopieras till `.medusa/server/`** — Medusa-bygget rensar servermappen; `.env` måste kopieras dit efter varje build
 - [x] **Stripe aktiverat i Admin** — Settings → Regions → Sweden → Payment Providers → valde "Stripe (STRIPE)"
-- [ ] **Ordrar i Medusa** — `createMedusaOrder()` i `webhooks/stripe/route.ts` använder `POST /admin/orders` som inte finns i Medusa v2. Behöver skrivas om till cart-baserat flöde via Medusa store API
+- [x] **Ordrar i Medusa — checkout rebuild 2026-06-14** — `POST /admin/orders` finns inte i Medusa v2. Skrev om hela checkout till korrekt cart-baserat flöde:
+  1. `POST /store/carts` → skapa cart med `region_id` + `sales_channel_id`
+  2. `POST /store/carts/{id}/line-items` → lägg till produkter (kräver SEK-varianter)
+  3. `POST /store/carts/{id}` → sätt email + leveransadress
+  4. `POST /store/carts/{id}/shipping-methods` → välj fraktmetod
+  5. `POST /store/payment-collections` → skapa payment collection
+  6. `POST /store/payment-collections/{id}/payment-sessions` → initiera Stripe → får `client_secret`
+  7. Frontend visar `PaymentElement` med `client_secret` → kunden betalar på sidan
+  8. `POST /store/carts/{id}/complete` → order skapas i Medusa efter godkänd betalning
+- [x] **`variantId` saknades i cartItems** — `CartAside.tsx` destructurade inte `variantId` från `addToCart`-eventet. Lade till `variantId` i destructuring och i det sparade cart-objektet i localStorage.
+- [x] **SEK-varianter krävs** — Gamla varianter hade EUR/USD-priser. Nya SEK-varianter skapades. `manage_inventory: false` sattes via `medusa exec`-script för att slippa stock location-krav.
+- [x] **Stripe-nycklar matchade inte** — Frontend använde `pk_test_...` men Medusa använde `sk_live_...`. Båda satta till test-nycklar för testning. OBS: Medusa läser `.env` från `.medusa/server/.env` (CWD) — inte från `apps/backend/.env`. Båda måste uppdateras vid nyckelbyten.
 - [x] **Produktbilder saknas efter build** — Medusa körs från `.medusa/server/` men bilder laddades upp till `apps/backend/static/`. Fix: skapade symlink `ln -s /opt/medusa-backend/apps/backend/static /opt/medusa-backend/apps/backend/.medusa/server/static`. Symlinken överlever framtida byggen.
 
-### 11.4 MCP-setup 2026-06-10
+### 11.4 Ordermail 2026-06-14
+- [x] **Ordermail skickas direkt från confirm-route** — Stripe webhook visade sig vara onödigt komplex (signaturverifiering, asynkron leverans, svår att debugga). Lösning: skicka mail direkt från `/api/medusa-checkout/confirm` när `POST /store/carts/{id}/complete` lyckas. `formData` och `total` skickas med från kassan till confirm-routen som sedan anropar Brevo direkt.
+- [x] **Medusa .env ligger i .medusa/server/.env** — inte i `apps/backend/.env`. Båda måste uppdateras vid nyckelbyten. Efter `medusa build` skrivs `.medusa/server/` om — kopiera alltid `.env` dit efteråt.
+- [x] **Stripe test vs live** — Medusa och frontend måste använda samma Stripe-läge. Test: `sk_test_` på VPS `.medusa/server/.env` + `pk_test_` i Vercel.
+
+### 11.5 MCP-setup 2026-06-10
 - [x] Installerade DBHub (PostgreSQL MCP) — Connected
 - [x] Installerade GitHub MCP — Connected
 - [x] Installerade Brevo MCP — Connected
