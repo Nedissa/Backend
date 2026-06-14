@@ -11,7 +11,7 @@ E-handelsplattform för teknikprodukter.
 ## Regler
 - Svara alltid på svenska
 - Kort och vertikalt — ingen klumpig text
-- Pusha alltid till GitHub efter varje kodändring
+- Pusha till GitHub ENDAST när användaren explicit säger "pusha"
 - Lägg aldrig till CSS/styling utan explicit godkännande
 - Kör npm update efter npm install
 
