@@ -21,9 +21,9 @@ export const GET = async (
     const pgConnection = req.scope.resolve(ContainerRegistrationKeys.PG_CONNECTION)
 
     const order = await pgConnection("order")
-      .join("order_item", "order.id", "order_item.order_id")
+      .join("order_line_item", "order.id", "order_line_item.order_id")
       .where("order.customer_id", customerId)
-      .where("order_item.product_id", productId)
+      .where("order_line_item.product_id", productId)
       .select("order.id")
       .first()
 

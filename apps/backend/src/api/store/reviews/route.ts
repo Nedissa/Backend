@@ -56,9 +56,9 @@ export const POST = async (
     let verifiedPurchase = false
     try {
       const orders = await pgConnection("order")
-        .join("order_item", "order.id", "order_item.order_id")
+        .join("order_line_item", "order.id", "order_line_item.order_id")
         .where("order.customer_id", customer_id)
-        .where("order_item.product_id", product_id)
+        .where("order_line_item.product_id", product_id)
         .select("order.id")
         .first()
       verifiedPurchase = !!orders
