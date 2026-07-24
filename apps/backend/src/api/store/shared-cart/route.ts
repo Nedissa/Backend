@@ -39,7 +39,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
   try {
     const pgConnection = req.scope.resolve(ContainerRegistrationKeys.PG_CONNECTION)
 
-    const id = crypto.randomBytes(4).toString("hex")
+    const id = crypto.randomBytes(3).toString("hex")
     const now = new Date()
     const expires = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000) // 30 dagar
 
