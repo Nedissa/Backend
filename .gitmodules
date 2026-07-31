@@ -1,0 +1,7 @@
+[submodule "Backend"]
+	path = Backend
+	url = https://github.com/Nedissa/Techpilots-Backend.git
+
+[submodule "Frontend"]
+	path = Frontend
+	url = https://github.com/Nedissa/Frontend.git

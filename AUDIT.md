@@ -250,6 +250,28 @@ Denna guide är avsedd att köras som en strukturerad genomgång av hela projekt
 
 **Princip:** Skicka alltid mail direkt från confirm-routen (synkront) — aldrig via Stripe webhooks (asynkront). Webhooks är komplexa att debugga och onödiga för ett enkelt bekräftelsemail.
 
+### CrowdSec bannar IP vid felaktig inloggning (2026-06-16)
+
+**Problem:** VPS:en (95.217.163.97) svarade inte alls på ping, SSH eller HTTPS — såg ut som hela servern var nere. Hetzner-konsolen visade servern som "ON" (grön) och nginx/Medusa/PM2 körde helt normalt internt. Orsaken hittades i `cscli decisions list`: vår egen IP var bannad av **CrowdSec**, ett intrångsskydd installerat på servern.
+
+**Rotorsak:** CrowdSec-scenariot `LePresidente/http-generic-401-bf` (i `/etc/crowdsec/scenarios/http-generic-bf.yaml`) bannar en IP som gör fler än **5 misslyckade POST-401-anrop inom 10 sekunder**. Det triggades av upprepade felaktiga inloggningsförsök under felsökning av login-sidan — men samma regel kan banna **vanliga kunder** som råkar skriva fel lösenord några gånger i rad, eller flera personer bakom samma kontors-/mobil-IP som loggar in samtidigt.
+
+**Lösning:**
+1. Ta bort aktuellt ban: `cscli decisions delete --ip <din-ip>`
+2. Höj tröskeln i `/etc/crowdsec/scenarios/http-generic-bf.yaml` för scenariot `LePresidente/http-generic-401-bf`:
+   - `capacity: 5` → `capacity: 20`
+   - `leakspeed: "10s"` → `leakspeed: "60s"`
+3. `systemctl restart crowdsec` för att ladda om
+
+**Snabbkoll vid "servern svarar inte" men Hetzner visar den som ON:**
+```bash
+# På servern (via Hetzner-webbkonsolen om SSH också är blockerat):
+cscli decisions list              # Visar aktiva bans — kolla om din IP finns där
+cscli decisions delete --ip <ip>  # Ta bort ett specifikt ban
+```
+
+**Princip:** Om VPS:en verkar helt oåtkomlig (ping/SSH/HTTPS timeout) men Hetzner-konsolen visar servern som igång — misstänk CrowdSec-ban innan du letar efter nätverks- eller serverfel. Logga in via Hetzners webbaserade konsol (fungerar även om SSH är blockerat) och kör `cscli decisions list`.
+
 ---
 
 ## HUR MAN KÖR AUDITEN
@@ -660,7 +682,7 @@ pm2 logs payload --lines 100
 - [x] Skapade `.mcp.json` i projektroten (ej i git)
 - [x] Lade till `.mcp.json` i `.gitignore`
 
-### 11.3 Löpande cleanup — checklista
+### 11.6 Löpande cleanup — checklista
 - [ ] Kör `npx depcheck` i frontend och backend — hitta oanvända npm-paket
 - [ ] Kolla `node_modules`-storlek — ta bort dev-dependencies som smugit in i prod
 - [ ] Granska alla filer i projektroten — inget ska ligga löst utan att höra dit
