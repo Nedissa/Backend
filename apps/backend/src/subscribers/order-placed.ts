@@ -16,7 +16,7 @@ export default async function orderPlacedHandler({
         "id", "display_id", "email", "total", "subtotal", "shipping_total",
         "currency_code", "created_at",
       ],
-      relations: ["items", "shipping_address", "shipping_methods", "payment_collections"],
+      relations: ["items", "shipping_address", "shipping_methods"],
     })
 
     if (!order?.email) return
@@ -28,10 +28,6 @@ export default async function orderPlacedHandler({
     const capitalize = (s: string) => s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : s
     const orderDate = new Date(order.created_at).toLocaleDateString("sv-SE", { year: "numeric", month: "long", day: "numeric" })
     const shippingName = (order.shipping_methods || [])[0]?.name || null
-    const paymentProvider = ((order as any).payment_collections || [])[0]?.payments?.[0]?.provider_id || null
-    const paymentLabel = paymentProvider
-      ? paymentProvider.replace("pp_stripe_", "").replace(/_/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase())
-      : null
 
     const itemRows = (order.items || []).map((item: any) => `
       <tr>
@@ -43,10 +39,9 @@ export default async function orderPlacedHandler({
 
     const address = order.shipping_address
 
-    const metaRow = [
-      shippingName ? `<td style="vertical-align:top;padding-right:24px;"><p style="margin:0 0 5px;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:#999;font-weight:600;">Leveranss&auml;tt</p><p style="margin:0;font-size:0.875rem;color:#111;">${shippingName}</p></td>` : "",
-      paymentLabel ? `<td style="vertical-align:top;"><p style="margin:0 0 5px;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:#999;font-weight:600;">Betal s&auml;tt</p><p style="margin:0;font-size:0.875rem;color:#111;">${paymentLabel}</p></td>` : "",
-    ].filter(Boolean).join("")
+    const metaRow = shippingName
+      ? `<td style="vertical-align:top;"><p style="margin:0 0 5px;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:#999;font-weight:600;">Leveranss&auml;tt</p><p style="margin:0;font-size:0.875rem;color:#111;">${shippingName}</p></td>`
+      : ""
 
     const html = `<!DOCTYPE html>
 <html>
