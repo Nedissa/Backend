@@ -154,6 +154,7 @@
 | **Props** | Data som skickas in till en komponent | När komponenten ska visa olika innehåll | Gör komponenter återanvändbara | `<ProductCard product={iphone} />` — `product` är en prop |
 | **State** | Intern data i en komponent som kan ändras | Formulär, toggle-knappar, laddningsstatus | När state ändras uppdateras UI:t automatiskt | `const [quantity, setQuantity] = useState(1)` |
 | **Hook (React)** | Funktion som ger React-funktionalitet | I alla funktionskomponenter | Återanvändbar logik utan att skriva klasser | `useState`, `useEffect`, `useCart` |
+| **Toast** | Liten notis-ruta som dyker upp tillfälligt och försvinner automatiskt | Vid feedback till användaren efter en handling | Ger bekräftelse eller felmeddelande utan att blockera sidan | "Kan bara jämföra samma produkttyp" — visas i 4 sekunder och försvinner |
 
 </details>
 
@@ -207,6 +208,8 @@
 | **Sales Channel** | Försäljningskanal | Konfiguration i Medusa | Separera webshop, app och B2B | Webshop-kanalen har egna priser och regler |
 | **Collection** | Grupp av produkter | Startsida, kampanjer | Kurerade produktlistor utan kategorier | "Nyheter", "Bästsäljare", "Rea" |
 | **Admin** | Medusas admin-panel | Daglig drift | Hantera produkter, ordrar och kunder utan kod | Lägg till produkt, hantera lager, se ordrar |
+| **Polling** | Frontend frågar servern upprepade gånger med ett fast intervall | När data behöver uppdateras utan att användaren laddar om sidan | Enkelt sätt att hålla data aktuell utan websockets | Kundkontosidan hämtar felanmälningsstatus var 30:e sekund automatiskt |
+| **Webhook** | Servern skickar data till en URL när något händer | Vid betalningar, ordrar och externa händelser | Realtid utan polling — push istället för pull | Stripe anropar er webhook när betalning lyckas |
 
 </details>
 
@@ -704,6 +707,97 @@ PowerShell används i **Windows-terminalen** lokalt.
 | **Asset** | Designfil, bild eller ikon som används i projektet | Under utveckling | Utvecklaren behöver rätt filer i rätt format | Logotyp som SVG, produktbilder i WebP, ikoner |
 | **Driftsättning** | Sätta projektet live för riktiga användare | I slutet av projektet | Det sista steget — projektet levereras | Deploy till Vercel, DNS pekas om, kunden är live |
 | **Hypercare** | Intensiv support direkt efter lansering | Första 1-2 veckorna live | Buggar dyker alltid upp i produktion | Ni är extra tillgängliga de första två veckorna efter lansering |
+
+</details>
+
+---
+
+<br><br>
+
+## VSCode
+
+<details>
+<summary><strong>Gränssnitt & Navigation</strong></summary>
+
+| Begrepp | Vad | När | Varför | Exempel |
+|---|---|---|---|---|
+| **Explorer** | Filträdet till vänster | Navigera mellan filer | Snabb översikt över projektstrukturen | Klicka på en fil för att öppna den |
+| **Editor** | Kodredigeraren i mitten | Alltid | Där du skriver koden | Öppna `page.tsx` och redigera |
+| **Terminal** | Inbyggd terminal i VSCode | Köra kommandon | Slipper byta fönster | `Ctrl + ö` öppnar terminalen |
+| **Split terminal** | Två terminaler sida vid sida | Dev-server i en, kommandon i den andra | Kör `npm run dev` i en och git-kommandon i den andra | Högerklicka på terminal-fliken → "Split terminal" |
+| **Command Palette** | Sökruta för alla VSCode-kommandon | Hitta funktioner snabbt | Slipper memorera alla kortkommandon | `Ctrl + Shift + P` → skriv vad du vill göra |
+| **Sidebar** | Vänsterpanelen med Explorer, Search, Git etc. | Navigering och verktyg | Snabb åtkomst till projektets delar | Klicka på Git-ikonen för att se ändringar |
+| **Activity Bar** | Ikonraden längst till vänster | Byta vy | Växla mellan Explorer, Search, Git och Extensions | Klicka på förstoringsglasset för att söka i koden |
+| **Status Bar** | Raden längst ner | Alltid synlig | Visar branch, fel, kodspråk och mer | Visar "main" när du är på main-branchen |
+| **Minimap** | Liten kodkarta till höger om editorn | I långa filer | Navigera snabbt i stora filer | Klicka i minimap för att hoppa till en sektion |
+| **Breadcrumb** | Sökväg ovanför koden | I editorn | Visar var i filen/mappen du är | `app > konto > page.tsx > handleLogin` |
+
+</details>
+
+---
+
+<details>
+<summary><strong>Kortkommandon</strong></summary>
+
+| Kommando | Vad | Plattform |
+|---|---|---|
+| `Ctrl + P` | Öppna fil snabbt — sök på filnamn | Windows |
+| `Ctrl + Shift + P` | Command Palette — alla kommandon | Windows |
+| `Ctrl + ö` | Öppna/stäng terminal | Windows |
+| `Ctrl + B` | Visa/dölj sidebar | Windows |
+| `Ctrl + Z` | Ångra | Windows |
+| `Ctrl + Shift + Z` | Gör om | Windows |
+| `Ctrl + /` | Kommentera/avkommentera raden | Windows |
+| `Ctrl + D` | Markera nästa förekomst av valt ord | Windows |
+| `Ctrl + Shift + L` | Markera alla förekomster av valt ord | Windows |
+| `Alt + ↑/↓` | Flytta raden upp eller ner | Windows |
+| `Ctrl + Shift + K` | Ta bort raden | Windows |
+| `Ctrl + F` | Sök i nuvarande fil | Windows |
+| `Ctrl + Shift + F` | Sök i hela projektet | Windows |
+| `Ctrl + G` | Gå till radnummer | Windows |
+| `F12` | Gå till definition | Windows |
+| `Alt + F12` | Förhandsgranska definition | Windows |
+| `Shift + F12` | Hitta alla referenser | Windows |
+| `F2` | Byt namn på variabel/funktion överallt | Windows |
+| `Ctrl + Space` | Trigga autocomplete | Windows |
+| `Ctrl + .` | Quick fix — föreslagna lösningar på fel | Windows |
+| `Ctrl + \`` | Ny terminal | Windows |
+| `Ctrl + W` | Stäng aktiv fil | Windows |
+| `Ctrl + Tab` | Bläddra mellan öppna filer | Windows |
+
+</details>
+
+---
+
+<details>
+<summary><strong>Git i VSCode</strong></summary>
+
+| Begrepp | Vad | När | Varför | Exempel |
+|---|---|---|---|---|
+| **Source Control** | Git-panelen i sidebaren | Se och hantera ändringar | Visuellt alternativ till git-kommandon i terminalen | Klicka på Git-ikonen för att se alla ändrade filer |
+| **Changes** | Filer som ändrats sedan senaste commit | Alltid | Visar exakt vad som ändrats | `page.tsx` visas med M (Modified) |
+| **Stage** | Markera fil för att ingå i nästa commit | Innan commit | Välj vilka ändringar som ska committas | Klicka `+` bredvid filen |
+| **Unstage** | Ta bort fil från staging | Innan commit | Ångra staging av en fil | Klicka `-` bredvid staged fil |
+| **Commit** | Spara staged ändringar med ett meddelande | Efter staging | Skapar en ögonblicksbild i historiken | Skriv meddelande och tryck `Ctrl + Enter` |
+| **Diff-vy** | Visa exakt vad som ändrats i en fil | Klicka på en ändrad fil | Röd = borttaget, grön = tillagt | Öppnas automatiskt när du klickar på en fil i Source Control |
+| **Branch-byta** | Byta aktiv branch | Klicka på branch-namnet i status bar | Snabbt byta utan terminal | Klicka "main" → välj branch |
+| **Gitlens** | Extension som visar vem som ändrat varje rad | I koden | Spåra ändringar och historik | Ser "Nedal, 2 dagar sedan" bredvid en kodrad |
+
+</details>
+
+---
+
+<details>
+<summary><strong>Felsökning & Debugging</strong></summary>
+
+| Begrepp | Vad | När | Varför | Exempel |
+|---|---|---|---|---|
+| **Problems-panel** | Lista med alla TypeScript- och ESLint-fel | `Ctrl + Shift + M` | Alla fel på ett ställe | Röda understrykningar i koden visas samlade här |
+| **Breakpoint** | Stopppunkt i koden för debugging | Vid felsökning | Koden pausar här — du kan inspektera alla variabler | Klicka i kanten till vänster om radnumret |
+| **Debug Console** | Kör kod och se värden under debugging | Under en debugging-session | Interagera med koden när den är pausad | Skriv `console.log(user)` för att se innehållet |
+| **Hover-info** | Håll musen över en variabel | Alltid i TypeScript | Ser typ och värde direkt | Hovra över `order` → ser hela typdef |
+| **Error Lens** | Visar fel direkt på kodraden | Alltid (med extensionen) | Slipper öppna Problems-panelen | Röd text bredvid raden med felet |
+| **Output-panel** | Loggar från extensions och processer | Vid felsökning | Ser vad extensions gör bakom kulisserna | Vercel-extension visar deploy-status här |
 
 </details>
 
