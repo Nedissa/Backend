@@ -128,19 +128,48 @@ export default async function orderPlacedHandler({
 </body>
 </html>`
 
-    await fetch("https://api.brevo.com/v3/smtp/email", {
-      method: "POST",
-      headers: {
-        "api-key": process.env.BREVO_API_KEY!,
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        sender: { name: "Techpilots", email: "info@techpilots.se" },
-        to: [{ email: order.email }],
-        subject: `Orderbekräftelse ${orderNumber} – Techpilots`,
-        htmlContent: html,
+    const totalStr = formatPrice(order.total as any ?? 0)
+    const itemList = (order.items || []).map((item: any) =>
+      `${capitalize(item.title)} x${item.quantity}`
+    ).join(", ")
+
+    const internalHtml = `<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="margin:0;padding:24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:#f5f5f5;">
+  <div style="max-width:480px;background:#fff;border-radius:8px;padding:24px;border:1px solid #e5e5e5;">
+    <h2 style="margin:0 0 16px;font-size:1rem;color:#111;">Ny order ${orderNumber}</h2>
+    <p style="margin:0 0 6px;font-size:0.875rem;color:#555;"><strong>Kund:</strong> ${address?.first_name || ""} ${address?.last_name || ""} &lt;${order.email}&gt;</p>
+    <p style="margin:0 0 6px;font-size:0.875rem;color:#555;"><strong>Produkter:</strong> ${itemList}</p>
+    <p style="margin:0 0 6px;font-size:0.875rem;color:#555;"><strong>Totalt:</strong> ${totalStr}</p>
+    ${shippingName ? `<p style="margin:0 0 6px;font-size:0.875rem;color:#555;"><strong>Leveranssätt:</strong> ${shippingName}</p>` : ""}
+    ${address ? `<p style="margin:0;font-size:0.875rem;color:#555;"><strong>Adress:</strong> ${address.address_1}, ${address.postal_code} ${address.city}</p>` : ""}
+  </div>
+</body>
+</html>`
+
+    await Promise.allSettled([
+      fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: { "api-key": process.env.BREVO_API_KEY!, "content-type": "application/json" },
+        body: JSON.stringify({
+          sender: { name: "Techpilots", email: "info@techpilots.se" },
+          to: [{ email: order.email }],
+          subject: `Orderbekräftelse ${orderNumber} – Techpilots`,
+          htmlContent: html,
+        }),
       }),
-    })
+      fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: { "api-key": process.env.BREVO_API_KEY!, "content-type": "application/json" },
+        body: JSON.stringify({
+          sender: { name: "Techpilots Order", email: "info@techpilots.se" },
+          to: [{ email: "order@techpilots.se" }],
+          subject: `Ny order ${orderNumber} – ${totalStr}`,
+          htmlContent: internalHtml,
+        }),
+      }),
+    ])
   } catch (err) {
     console.error("[order-placed] Failed to send confirmation email:", err)
   }
