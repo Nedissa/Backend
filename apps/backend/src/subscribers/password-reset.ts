@@ -7,7 +7,7 @@ export default async function passwordResetHandler({
   const token = data?.token
   if (!email || !token) return
 
-  const resetUrl = `${process.env.STORE_URL || "https://techpilots.se"}/aterstall-losenord?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}`
+  const resetUrl = `${process.env.STORE_URL || "https://techpilots.vercel.app"}/aterstall-losenord?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}`
 
   await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
