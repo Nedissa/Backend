@@ -12,7 +12,7 @@ export default async function fulfillmentCaptureHandler({
     const paymentModule = container.resolve(Modules.PAYMENT)
 
     const collections = await paymentModule.listPaymentCollections(
-      { order_id: orderId },
+      { order_id: orderId } as any,
       { relations: ["payments"] }
     )
 
