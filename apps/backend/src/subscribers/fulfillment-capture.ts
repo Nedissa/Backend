@@ -10,18 +10,17 @@ export default async function fulfillmentCaptureHandler({
     if (!orderId) return
 
     const paymentModule = container.resolve(Modules.PAYMENT)
-    const orderModule = container.resolve(Modules.ORDER)
 
-    const order = await orderModule.retrieveOrder(orderId, {
-      select: ["id", "payment_collections"],
-      relations: ["payment_collections", "payment_collections.payments"],
-    })
+    const collections = await paymentModule.listPaymentCollections(
+      { order_id: orderId },
+      { relations: ["payments"] }
+    )
 
-    const payments = order.payment_collections?.flatMap((pc: any) => pc.payments ?? []) ?? []
-
-    for (const payment of payments) {
-      if (payment.captured_at) continue
-      await paymentModule.capturePayment({ payment_id: payment.id })
+    for (const collection of collections) {
+      for (const payment of (collection as any).payments ?? []) {
+        if (payment.captured_at) continue
+        await paymentModule.capturePayment({ payment_id: payment.id })
+      }
     }
   } catch (err) {
     console.error("[fulfillment-capture] fel vid capture:", err)
