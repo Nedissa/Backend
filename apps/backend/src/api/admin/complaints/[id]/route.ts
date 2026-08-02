@@ -34,7 +34,7 @@ export const PATCH = async (
       const customer = customers[0]
 
       if (customer) {
-        const html = `<div style="font-family:Inter,sans-serif;max-width:600px;margin:0 auto;background:#fff;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;"><div style="background:#000;padding:24px 32px;"><h1 style="color:#fff;margin:0;font-size:1.2rem;">Din felanmälan är löst</h1></div><div style="padding:32px;"><p style="font-size:0.95rem;color:#333;line-height:1.7;">Hej ${customer.first_name || ""},</p><p style="font-size:0.95rem;color:#333;line-height:1.7;">Vi har nu löst din felanmälan gällande order #${complaint.order_number || complaint.order_id}.</p><div style="background:#f9fafb;border-left:4px solid #000;padding:16px 20px;margin:24px 0;border-radius:4px;"><p style="margin:0;font-size:0.9rem;color:#555;">${complaint.description}</p></div><p style="font-size:0.95rem;color:#333;line-height:1.7;">Har du fler frågor? Kontakta oss på <a href="mailto:support@techpilots.se" style="color:#000;">support@techpilots.se</a>.</p></div><div style="background:#f5f5f5;padding:16px 32px;font-size:0.75rem;color:#888;">Techpilots AB &bull; support@techpilots.se &bull; +46 10 880 09 81</div></div>`
+        const resolvedDate = new Date().toLocaleDateString("sv-SE", { year: "numeric", month: "long", day: "numeric" })
 
         await fetch("https://api.brevo.com/v3/smtp/email", {
           method: "POST",
@@ -43,10 +43,15 @@ export const PATCH = async (
             "content-type": "application/json",
           },
           body: JSON.stringify({
-            sender: { name: "Techpilots", email: "info@techpilots.se" },
             to: [{ email: customer.email }],
-            subject: "Din felanmälan är löst - Techpilots",
-            htmlContent: html,
+            templateId: 4,
+            params: {
+              firstName: customer.first_name || "",
+              caseNumber: complaint.id,
+              resolution: "Åtgärdad",
+              resolvedDate,
+              message: complaint.description || "",
+            },
           }),
         })
       }
