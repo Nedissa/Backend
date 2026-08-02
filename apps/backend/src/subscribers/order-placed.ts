@@ -34,6 +34,7 @@ export default async function orderPlacedHandler({
       title: capitalize(item.title),
       quantity: item.quantity,
       price: formatPrice(item.unit_price * item.quantity),
+      image: item.thumbnail || "",
     }))
 
     const params = {
