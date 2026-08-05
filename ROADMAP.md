@@ -1,6 +1,6 @@
 # Techpilots — Roadmap
 
-> Uppdaterad: 2026-07-31
+> Uppdaterad: 2026-08-04
 
 ---
 
@@ -88,11 +88,27 @@
 
 ---
 
+## Klart sedan senast ✅
+
+- Jämförelsemodal (desktop + mobil) med swipe, sticky kort, spec-alignment
+- Recensioner med Bazaarvoice-stil header (stjärnfördelning)
+- Tillbehör-sektion på produktsida — dynamisk via `/api/accessories`
+- Tillbehörs-kategorier skapade i Medusa (`grafikkort-tillbehor`, `laptop-tillbehor`, `kylare-tillbehor`, `stationardator-tillbehor`)
+- Footer marinblå (#0f2448)
+- Produktkort: reducerade mellanrum, ingen karusell-punkter
+- Karusell-pilar på kanterna som overlay
+- Kundvagns-badge mindre
+- Blogg-kategorier förskjuts ej vid val (fast fontWeight)
+
+---
+
 ## Blockers just nu
 
 | Problem | Prioritet |
 |---|---|
+| Stripe test-keys → live-keys (byt inför launch) | Kritisk |
+| Tillbehör ej taggade i Medusa-kategorier än | Hög |
 | Poäng-logik ej kopplad till köp | Hög |
-| Stripe live-läge ej testat | Hög |
-| Ordermail-flödet ej verifierat | Hög |
-| Produktsortiment för litet | Medel |
+| Produktsortiment för litet | Hög |
+| Kundservice-sidor saknar riktigt innehåll | Medel |
+| Meta-titlar/beskrivningar saknas | Medel |
