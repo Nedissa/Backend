@@ -29,7 +29,14 @@ E-handelsplattform för teknikprodukter.
 - **dbhub** — SQL mot Medusa PostgreSQL-databasen
 - **github** — GitHub issues, PRs, commits
 - **brevo** — Email-kampanjer, kontakter, analytics
-- **slack** — Meddelanden och notifikationer
+
+Avaktiverade (drog tokens utan att användas): chrome-devtools, fetch (borttagna ur `.mcp.json`), Slack, Google Drive (disabled på kontonivå).
+
+## Kredit-/tokenhantering
+- Var sparsam med underagenter (Agent-tool) — starta bara vid uppgifter som verkligen kräver bred sökning eller isolerad granskning
+- Håll konversationer korta och avgränsade per uppgift. Använd `/compact` när en lång session måste fortsätta, `/clear` eller ny session vid ny uppgift
+- Föreslå `claude-md-management:revise-claude-md` efter större arbetssessioner (ny funktion, arkitekturbeslut) innan sessionen stängs, så beslut hamnar här istället för att försvinna med tråden
+- Kontrollera `/mcp` då och då för nya inaktiva/oanvända MCP-servrar som laddas i onödan
 
 ## Viktiga filer
 - `KEYS.md` — var alla nycklar finns
@@ -71,3 +78,19 @@ Komponenter kommunicerar via `window.dispatchEvent(new CustomEvent(...))` istäl
 
 ### Frontend är ett Git-submodul
 `Frontend/` är ett submodul till huvud-repot. Committa och pusha **inuti** `Frontend/` först, sedan uppdatera submodul-pekaren i huvud-repot.
+
+## Juridik & Returpolicy
+- Ångerrätt: 14 dagar enligt distansavtalslagen (INTE 30 dagar)
+- Itegra är leverantör — nämns aldrig i kundtexter
+- Stora varumärken (Asus, HP, Samsung) hanterar reklamationer direkt med kunden
+- Returer: kunden bekostas, produkten ska vara i originalskick
+
+## Textregler (hela frontenden)
+- Använd aldrig tankstreck (—) i kundsynliga texter. Punkt eller omformulering istället
+- Gästkassa ska alltid finnas. Tvinga aldrig konto vid köp
+
+## Sortimentsstrategi (Webshop)
+- Fokus: lågretursortiment (kablar, tillbehör, skärmskydd)
+- Stora märken med direktservice = kunden kontaktar tillverkaren
+- Fri frakt över 499 kr, 49 kr under
+- Dropshipping via Itegra (Komplett Distribution Sweden AB)

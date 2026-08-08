@@ -476,6 +476,9 @@ PowerShell används i **Windows-terminalen** lokalt.
 | Begrepp | Vad | När | Varför | Exempel |
 |---|---|---|---|---|
 | **SEO** | Search Engine Optimization — optimering för sökmotorer | Alltid, byggs in i strukturen | Organisk trafik från Google är gratis och långsiktig | Rätt titlar och meta-beskrivningar på produktsidor |
+| **Open Graph** | Metadata-taggar som styr hur sidan ser ut vid delning | Alltid — byggs in i `<head>` | Styr titel, beskrivning och bild i förhandsvisning på Facebook, LinkedIn och iMessage | Delas ett projekt på LinkedIn visas rätt bild och rubrik automatiskt |
+| **Twitter Card** | Samma som Open Graph men specifikt för X/Twitter | Alltid — sätts i metadata | `summary_large_image` ger stor bild + titel + beskrivning i flödet | Delad länk på X visas som ett snyggt kort istället för bare URL |
+| **Canonical URL** | Talar om för Google vilken URL som är "originalet" | När samma innehåll kan nås via flera adresser | Förhindrar att Google straffar er för duplicerat innehåll | `/webbstudio/projekt/crownmatch` är canonical — inte `?ref=instagram` |
 | **Organisk trafik** | Besökare som hittar er via Google utan betald annons | Löpande | Gratis och hållbar trafik på lång sikt | Någon söker "köp iPhone 15 Sverige" och hittar techpilots.se |
 | **Betald trafik** | Besökare via betalda annonser | Kampanjer och lansering | Snabb synlighet — du betalar per klick | Google Ads-annons visas överst vid sökning |
 | **Google Ads** | Googles annonssystem | Betald synlighet i sökresultaten | Syns direkt — till skillnad från SEO som tar tid | Annons för "iPhone 15 billigt" visas för köpklara kunder |
