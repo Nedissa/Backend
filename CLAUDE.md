@@ -39,10 +39,12 @@ Avaktiverade (drog tokens utan att användas): chrome-devtools, fetch (borttagna
 - Kontrollera `/mcp` då och då för nya inaktiva/oanvända MCP-servrar som laddas i onödan
 
 ## Viktiga filer
-- `KEYS.md` — var alla nycklar finns
-- `AUDIT.md` — felsökning och best practice
+- `docs/KEYS.md` — var alla nycklar finns
+- `docs/AUDIT.md` — felsökning och best practice
 - `.mcp.json` — MCP-konfiguration (ej i git)
-- `MARKETING.md` — marketing agent för Techpilots Webshop & Studio
+- `docs/MARKETING.md` — marketing agent för Techpilots Webshop & Studio
+- `docs/` — övrig dokumentation (GLOSSARY, ITEGRA-PRODUCTS, ROADMAP, BOKFÖRING)
+- `infra/` — serverkonfiguration och verktyg (medusa-nginx.conf, email-preview.html)
 
 ## Kommandon
 
@@ -63,10 +65,11 @@ cd /opt/medusa-backend && npm run start
 
 ### Frontend (Next.js 16 App Router)
 - `app/` — sidor och layouts (App Router)
-- `app/components/` — delade komponenter
-  - `CompareBar.tsx` — flytande jämförelsebar + modal (komplex, hanterar mobil/desktop separat)
-  - `CompareContext.tsx` — global state för jämförelselista (localStorage + custom events)
-  - `ProductCard.tsx` — produktkort används överallt, lyssnar på `toggleCompare`/`clearCompare` events
+- `app/components/` — delade komponenter, grupperade efter ansvar (`product/`, `cart/`, `auth/`, `layout/`, `home/`, `checkout/`, `shared/`, `Header/`)
+  - `product/CompareBar.tsx` — flytande jämförelsebar + modal (komplex, hanterar mobil/desktop separat)
+  - `product/CompareContext.tsx` — global state för jämförelselista (localStorage + custom events)
+  - `product/ProductCard.tsx` — produktkort används överallt, lyssnar på `toggleCompare`/`clearCompare` events
+  - `Header/` — uppdelad i menuData, MobileHeader, MobileMenu, DesktopHeader, MegaMenu, index (state)
 - `app/produkter/[handle]/` — produktdetaljsida
 - `app/produktserier/[slug]/[handle]/` — produktseriesida
 

@@ -1,4 +1,4 @@
-KEYS.md
+docs/KEYS.md
 .env
 .env.*
 !.env.example
