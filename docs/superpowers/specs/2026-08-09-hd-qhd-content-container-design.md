@@ -20,9 +20,9 @@ Två nya Tailwind-breakpoints läggs till, utöver (inte i stället för) standa
 | Skärmbredd (min-width) | Container max-width |
 |---|---|
 | < 2560px (inkl. HD/1920px) | 1080px |
-| ≥ 2560px (QHD) | 1440px |
+| ≥ 2560px (QHD) | 1600px |
 
-HD-värdet justerades under implementation i flera steg (1280 → 1200 → 1140 → 1080px) efter visuell bedömning direkt på en faktisk Full HD-skärm; varje mellansteg bedömdes fortfarande för brett. QHD-värdet (1440px) matchar Elgigantens motsvarande container, verifierat genom direkt mätning av deras produktionssajt.
+HD-värdet justerades under implementation i flera steg (1280 → 1200 → 1140 → 1080px) efter visuell bedömning direkt på en faktisk Full HD-skärm; varje mellansteg bedömdes fortfarande för brett. QHD-värdet startade på 1440px (Elgigantens motsvarande container) men bedömdes för smalt på en faktisk QHD-skärm och justerades upp till 1600px.
 
 **Implementationsdetalj:** löst med en global CSS custom property (`--content-max-width`, satt i `app/layout.tsx`) som växlar värde vid `@media (min-width: 2560px)`, snarare än Tailwinds `hd:`/`qhd:`-breakpoint-prefix. Detta eftersom flera av de 15 ställena satte bredden via inline `style={{ maxWidth }}` (inklusive ett `calc()`-uttryck i `Aside.tsx`) som inte kan uttrycka Tailwind-varianter. Tailwind-klass-baserade ställen använder `qhd:max-w-[1440px]` (kräver ändå `qhd: '2560px'` i `tailwind.config.ts` `theme.extend.screens`), inline-style-baserade ställen använder klasserna `.ml-container`/`.content-container` eller `var(--content-max-width)` direkt.
 
