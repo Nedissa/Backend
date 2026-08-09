@@ -15,16 +15,21 @@ Slutsats: ett enda gemensamt värde kan inte tillfredsställa både HD och QHD s
 
 ## Lösning
 
-Två nya Tailwind-breakpoints läggs till, utöver (inte i stället för) standardskalan:
+Tre nivåer istället för ett enda fast värde, styrda av två nya Tailwind-breakpoints (`hd`, `qhd`) utöver (inte i stället för) standardskalan:
 
-| Skärmbredd (min-width) | Container max-width |
-|---|---|
-| < 2560px (inkl. HD/1920px) | 1080px |
-| ≥ 2560px (QHD) | 1600px |
+| Skärmbredd (min-width) | Container max-width | Täcker (StatCounter Sverige, juli 2026) |
+|---|---|---|
+| 1024px (bas) | 960px | 1280×720, 1366×768, 1536×864 — äldre/budget-laptops, ~21% av all trafik |
+| 1920px (`hd`) | 1080px | 1920×1080 — vanligaste upplösningen, 11,3% av all trafik |
+| 2560px (`qhd`) | 1600px | 2560×1440 — 2,6% av all trafik |
 
-HD-värdet justerades under implementation i flera steg (1280 → 1200 → 1140 → 1080px) efter visuell bedömning direkt på en faktisk Full HD-skärm; varje mellansteg bedömdes fortfarande för brett. QHD-värdet startade på 1440px (Elgigantens motsvarande container) men bedömdes för smalt på en faktisk QHD-skärm och justerades upp till 1600px.
+Beslutshistorik:
+- Ursprungligt värde (innan detta arbete): 1280px för alla skärmar. Kändes för smalt/glest på QHD.
+- HD-värdet testades i flera steg (1280 → 1200 → 1140 → 1080px) innan 1080px bedömdes rätt på en faktisk Full HD-skärm.
+- QHD-värdet startade på 1440px (Elgigantens motsvarande container) men bedömdes för smalt på en faktisk QHD-skärm och justerades upp till 1600px.
+- Den tredje nivån (960px, <1920px) lades till efter att StatCounter-data visade att 1366×768 och 1280×720 tillsammans utgör en större andel av all trafik (~11%) än QHD (2,6%) — dessa delade tidigare HD:s 1080px-värde med onödigt smal marginal. 1536×864 inkluderas i samma nivå trots att det oftast är en Windows-skalad 1920×1080-panel (125% skalning), inte en fysiskt smalare skärm — men webbläsaren rapporterar det skalade CSS-pixelvärdet, så samma container-regel gäller ändå.
 
-**Implementationsdetalj:** löst med en global CSS custom property (`--content-max-width`, satt i `app/layout.tsx`) som växlar värde vid `@media (min-width: 2560px)`, snarare än Tailwinds `hd:`/`qhd:`-breakpoint-prefix. Detta eftersom flera av de 15 ställena satte bredden via inline `style={{ maxWidth }}` (inklusive ett `calc()`-uttryck i `Aside.tsx`) som inte kan uttrycka Tailwind-varianter. Tailwind-klass-baserade ställen använder `qhd:max-w-[1440px]` (kräver ändå `qhd: '2560px'` i `tailwind.config.ts` `theme.extend.screens`), inline-style-baserade ställen använder klasserna `.ml-container`/`.content-container` eller `var(--content-max-width)` direkt.
+**Implementationsdetalj:** löst med en global CSS custom property (`--content-max-width`, satt i `app/layout.tsx`) som växlar värde vid `@media (min-width: 1920px)` och `@media (min-width: 2560px)`, snarare än enbart Tailwinds `hd:`/`qhd:`-breakpoint-prefix. Detta eftersom flera av de 15 ställena satte bredden via inline `style={{ maxWidth }}` (inklusive ett `calc()`-uttryck i `Aside.tsx`) som inte kan uttrycka Tailwind-varianter. Tailwind-klass-baserade ställen använder `max-w-[960px] hd:max-w-[1080px] qhd:max-w-[1600px]` (kräver `hd: '1920px'` och `qhd: '2560px'` i `tailwind.config.ts` `theme.extend.screens`), inline-style-baserade ställen använder klasserna `.ml-container`/`.content-container` eller `var(--content-max-width)` direkt.
 
 ## Scope
 
@@ -55,4 +60,4 @@ HD-värdet justerades under implementation i flera steg (1280 → 1200 → 1140 
 
 ## Verifiering
 
-Genomfört: `getComputedStyle` bekräftar att alla 5 mätbara container-element (header, hero, footer, m.fl.) rapporterar `1080px` max-width vid skärmbredd < 2560px. CSS-koden för `@media (min-width: 2560px)`-regeln är verifierad korrekt renderad i DOM via läsning av den faktiska `<style>`-taggen. QHD-läget (1440px) kunde inte verifieras visuellt i en riktig 2560px-bred vy i den här sessionen (verktygets webbläsarfönster begränsades till värdens faktiska skärmstorlek) — kvarstår att bekräfta visuellt på en riktig QHD-skärm eller via en bredare extern monitor.
+Genomfört: `getComputedStyle` bekräftar att `--content-max-width` korrekt rapporterar `960px` vid nuvarande testviewport (1024–1919px-intervallet), och att alla mätbara container-element matchar detta värde. CSS-koden för både `@media (min-width: 1920px)`- och `@media (min-width: 2560px)`-reglerna är verifierad korrekt renderad i DOM via läsning av den faktiska `<style>`-taggen. HD-läget (1080px) verifierades tidigare i samma session direkt i browser. QHD-läget (1600px) kunde inte verifieras visuellt i en riktig 2560px-bred vy i den här sessionen (verktygets webbläsarfönster begränsades till värdens faktiska skärmstorlek) — kvarstår att bekräfta visuellt på en riktig QHD-skärm eller via en bredare extern monitor.
