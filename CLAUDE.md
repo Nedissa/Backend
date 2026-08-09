@@ -15,6 +15,7 @@ E-handelsplattform för teknikprodukter.
 ## Regler
 - Svara alltid på svenska
 - Kort och vertikalt — ingen klumpig text
+- Svara kortfattat och strukturerat (rubriker/punktlistor), lätt att skanna visuellt
 - Pusha till GitHub ENDAST när användaren explicit säger "pusha"
 - Lägg aldrig till CSS/styling utan explicit godkännande
 - Kör npm update efter npm install
@@ -30,13 +31,17 @@ E-handelsplattform för teknikprodukter.
 - **github** — GitHub issues, PRs, commits
 - **brevo** — Email-kampanjer, kontakter, analytics
 
-Avaktiverade (drog tokens utan att användas): chrome-devtools, fetch (borttagna ur `.mcp.json`), Slack, Google Drive (disabled på kontonivå).
+- **chrome-devtools** — aktiverad permanent för visuell verifiering av frontend-ändringar. Avaktivera ALDRIG denna
+- Chrome-sökväg: `C:\Program Files\Google\Chrome Dev\Application\chrome.exe` (Chrome Dev-kanalen, inte stable) — konfigurerad i `.mcp.json` via `--executablePath`
+
+Borttagna ur `.mcp.json` (drog tokens utan att användas): fetch, Slack, Google Drive (disabled på kontonivå).
 
 ## Kredit-/tokenhantering
 - Var sparsam med underagenter (Agent-tool) — starta bara vid uppgifter som verkligen kräver bred sökning eller isolerad granskning
 - Håll konversationer korta och avgränsade per uppgift. Använd `/compact` när en lång session måste fortsätta, `/clear` eller ny session vid ny uppgift
 - Föreslå `claude-md-management:revise-claude-md` efter större arbetssessioner (ny funktion, arkitekturbeslut) innan sessionen stängs, så beslut hamnar här istället för att försvinna med tråden
 - Kontrollera `/mcp` då och då för nya inaktiva/oanvända MCP-servrar som laddas i onödan
+- **Vid felsökning (troubleshooting): börja alltid med den mest självklara/enklaste förklaringen och lösningen först** — kolla CSS-grunder (z-index, stacking context, display, position) innan du gräver djupare i DOM-inspektion, race conditions eller ovanliga edge-cases. Undvik att dra in avancerade verktyg (browser-devtools-grävande, elementFromPoint, shadow-DOM-sökningar) för problem som troligen har en enkel orsak
 
 ## Viktiga filer
 - `docs/KEYS.md` — var alla nycklar finns
