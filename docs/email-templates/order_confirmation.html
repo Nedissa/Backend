@@ -11,7 +11,7 @@
 
 <!-- INTRO -->
 <tr><td style="padding:32px 40px 20px;">
-<div style="font-size:1.4rem;font-weight:800;color:#000000;margin-bottom:8px;">Tack f&ouml;r din order, {{ params.firstName }}!</div>
+<div style="font-size:1.4rem;font-weight:800;color:#000000;margin-bottom:8px;">Tack f&ouml;r din order, {{ event.firstName }}!</div>
 <div style="font-size:0.95rem;color:#333333;line-height:1.7;">Teamet p&aring; Techpilots packar nu din order.</div>
 </td></tr>
 
@@ -19,8 +19,8 @@
 <tr><td style="padding:20px 40px 0;"><div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.05em;font-weight:700;color:#333333;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e5e5e5;">Orderdetaljer</div></td></tr>
 <tr><td style="padding:0 40px 20px;border-bottom:1px solid #e5e5e5;">
 <table width="100%" cellpadding="0" cellspacing="0">
-<tr><td style="font-size:0.825rem;color:#111111;padding:9px 0;border-bottom:1px solid #f3f3f3;width:50%;">Ordernummer</td><td style="font-size:0.825rem;color:#111111;font-weight:600;text-align:right;padding:9px 0;border-bottom:1px solid #f3f3f3;">{{ params.orderNumber }}</td></tr>
-<tr><td style="font-size:0.825rem;color:#111111;padding:9px 0;">Orderdatum</td><td style="font-size:0.825rem;color:#111111;text-align:right;padding:9px 0;">{{ params.orderDate }}</td></tr>
+<tr><td style="font-size:0.825rem;color:#111111;padding:9px 0;border-bottom:1px solid #f3f3f3;width:50%;">Ordernummer</td><td style="font-size:0.825rem;color:#111111;font-weight:600;text-align:right;padding:9px 0;border-bottom:1px solid #f3f3f3;">{{ event.orderNumber }}</td></tr>
+<tr><td style="font-size:0.825rem;color:#111111;padding:9px 0;">Orderdatum</td><td style="font-size:0.825rem;color:#111111;text-align:right;padding:9px 0;">{{ event.orderDate }}</td></tr>
 </table></td></tr>
 
 <!-- PRODUKTER -->
@@ -33,7 +33,7 @@
 <th style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.07em;color:#888888;font-weight:600;padding:0 0 10px;text-align:right;border-bottom:1px solid #e8e8e8;">Pris</th>
 </tr></thead>
 <tbody>
-{% for item in params.items %}
+{% for item in event.items %}
 <tr>
 <td style="padding:10px 0;border-bottom:1px solid #f3f3f3;">
 <table cellpadding="0" cellspacing="0"><tr>
@@ -51,25 +51,25 @@
 <tr><td style="padding:20px 40px 0;"><div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.05em;font-weight:700;color:#333333;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e5e5e5;">Summering</div></td></tr>
 <tr><td style="padding:0 40px 20px;border-bottom:1px solid #e5e5e5;">
 <table width="100%" cellpadding="0" cellspacing="0">
-<tr><td style="font-size:0.825rem;color:#555555;padding:5px 0;">Delsumma</td><td style="font-size:0.825rem;color:#111111;text-align:right;padding:5px 0;">{{ params.subtotal }}</td></tr>
-<tr><td style="font-size:0.825rem;color:#555555;padding:5px 0;">Frakt</td><td style="font-size:0.825rem;color:#111111;text-align:right;padding:5px 0;">{{ params.shipping }}</td></tr>
-<tr><td style="font-size:0.775rem;color:#999999;padding:5px 0;">Varav moms (25%)</td><td style="font-size:0.775rem;color:#999999;text-align:right;padding:5px 0;">{{ params.vat }}</td></tr>
-<tr><td style="font-size:0.925rem;font-weight:700;color:#111111;padding-top:12px;border-top:1.5px solid #111111;">Totalt att betala</td><td style="font-size:0.925rem;font-weight:700;color:#111111;text-align:right;padding-top:12px;border-top:1.5px solid #111111;">{{ params.total }}</td></tr>
+<tr><td style="font-size:0.825rem;color:#555555;padding:5px 0;">Delsumma</td><td style="font-size:0.825rem;color:#111111;text-align:right;padding:5px 0;">{{ event.subtotal }}</td></tr>
+<tr><td style="font-size:0.825rem;color:#555555;padding:5px 0;">Frakt</td><td style="font-size:0.825rem;color:#111111;text-align:right;padding:5px 0;">{{ event.shipping }}</td></tr>
+<tr><td style="font-size:0.775rem;color:#999999;padding:5px 0;">Varav moms (25%)</td><td style="font-size:0.775rem;color:#999999;text-align:right;padding:5px 0;">{{ event.vat }}</td></tr>
+<tr><td style="font-size:0.925rem;font-weight:700;color:#111111;padding-top:12px;border-top:1.5px solid #111111;">Totalt att betala</td><td style="font-size:0.925rem;font-weight:700;color:#111111;text-align:right;padding-top:12px;border-top:1.5px solid #111111;">{{ event.total }}</td></tr>
 </table></td></tr>
 
 <!-- LEVERANS & BETALNING -->
 <tr><td style="padding:20px 40px 0;"><div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.05em;font-weight:700;color:#333333;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e5e5e5;">Leverans &amp; Betalning</div></td></tr>
 <tr><td style="padding:0 40px 20px;border-bottom:1px solid #e5e5e5;">
 <table width="100%" cellpadding="0" cellspacing="0">
-<tr><td style="font-size:0.825rem;color:#111111;padding:9px 0;border-bottom:1px solid #f3f3f3;width:50%;">Leveranss&auml;tt</td><td style="font-size:0.825rem;color:#111111;text-align:right;padding:9px 0;border-bottom:1px solid #f3f3f3;">{{ params.shippingMethod }}</td></tr>
-<tr><td style="font-size:0.825rem;color:#111111;padding:9px 0;border-bottom:1px solid #f3f3f3;">F&ouml;rv&auml;ntad leverans</td><td style="font-size:0.825rem;color:#111111;text-align:right;padding:9px 0;border-bottom:1px solid #f3f3f3;">{{ params.estimatedDelivery }}</td></tr>
-<tr><td style="font-size:0.825rem;color:#111111;padding:9px 0;">Betals&auml;tt</td><td style="font-size:0.825rem;color:#111111;text-align:right;padding:9px 0;">{{ params.paymentMethod }}</td></tr>
+<tr><td style="font-size:0.825rem;color:#111111;padding:9px 0;border-bottom:1px solid #f3f3f3;width:50%;">Leveranss&auml;tt</td><td style="font-size:0.825rem;color:#111111;text-align:right;padding:9px 0;border-bottom:1px solid #f3f3f3;">{{ event.shippingMethod }}</td></tr>
+<tr><td style="font-size:0.825rem;color:#111111;padding:9px 0;border-bottom:1px solid #f3f3f3;">F&ouml;rv&auml;ntad leverans</td><td style="font-size:0.825rem;color:#111111;text-align:right;padding:9px 0;border-bottom:1px solid #f3f3f3;">{{ event.estimatedDelivery }}</td></tr>
+<tr><td style="font-size:0.825rem;color:#111111;padding:9px 0;">Betals&auml;tt</td><td style="font-size:0.825rem;color:#111111;text-align:right;padding:9px 0;">{{ event.paymentMethod }}</td></tr>
 </table></td></tr>
 
 <!-- LEVERANSADRESS -->
 <tr><td style="padding:20px 40px 0;"><div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.05em;font-weight:700;color:#333333;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e5e5e5;">Leveransadress</div></td></tr>
 <tr><td style="padding:0 40px 20px;border-bottom:1px solid #e5e5e5;">
-<div style="font-size:0.9rem;color:#333333;line-height:1.7;">{{ params.firstName }} {{ params.lastName }}<br>{{ params.addressLine1 }}<br>{{ params.postalCode }} {{ params.city }}</div>
+<div style="font-size:0.9rem;color:#333333;line-height:1.7;">{{ event.firstName }} {{ event.lastName }}<br>{{ event.addressLine1 }}<br>{{ event.postalCode }} {{ event.city }}</div>
 </td></tr>
 
 <!-- CTA -->
