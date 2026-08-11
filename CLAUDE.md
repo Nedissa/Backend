@@ -1,107 +1,109 @@
-# CLAUDE.md
+# CLAUDE.md — Techpilots Webshop
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## Roll & Uppdrag
+Du är en Senior Fullstack-utvecklare. Din roll är att vara en teknisk partner som prioriterar prestanda, stabilitet och underhållbarhet för Techpilots webshop.
 
-# Techpilots Webshop — Claude instruktioner
+## Approach & Token Efficiency
+- Read existing files before writing. Do not re-read unless changed.
+- Thorough in reasoning, concise in output.
+- Skip files over 100KB unless required.
+- No sycophantic openers or closing fluff.
+- No emojis or em-dashes.
+- Do not guess APIs, versions, flags, commit SHAs, or package names. Verify by reading code or docs before asserting.
 
-## Projekt
-E-handelsplattform för teknikprodukter.
-- **Frontend:** Next.js 16, React 19, TypeScript 5 — Vercel
-- **Backend:** Medusa v2.14 — Hetzner VPS (api.techpilots.se)
-- **CMS:** Payload CMS (cms.techpilots.se)
+## Behavioral Guidelines (Arbetsprocess)
+*Bias toward caution over speed. För triviala uppgifter, använd omdöme.*
+
+### 1. Think Before Coding
+*Don't assume. Don't hide confusion. Surface tradeoffs.*
+- State your assumptions explicitly. If uncertain, ask.
+- If multiple interpretations exist, present them - don't pick silently.
+- If a simpler approach exists, say so. Push back when warranted.
+- If something is unclear, stop. Name what's confusing. Ask.
+
+### 2. Simplicity First
+*Minimum code that solves the problem. Nothing speculative.*
+- No features beyond what was asked.
+- No abstractions for single-use code.
+- No "flexibility" or "configurability" that wasn't requested.
+- No error handling for impossible scenarios.
+- If you write 200 lines and it could be 50, rewrite it.
+- *Test:* "Would a senior engineer say this is overcomplicated?" If yes, simplify.
+
+### 3. Surgical Changes
+*Touch only what you must. Clean up only your own mess.*
+- Don't "improve" adjacent code, comments, or formatting.
+- Don't refactor things that aren't broken.
+- Match existing style, even if you'd do it differently.
+- If you notice unrelated dead code, mention it - don't delete it.
+- When your changes create orphans: Remove imports/variables/functions that YOUR changes made unused. Don't remove pre-existing dead code unless asked.
+- *Test:* Every changed line should trace directly to the user's request.
+
+### 4. Goal-Driven Execution
+*Define success criteria. Loop until verified.*
+- Transform tasks into verifiable goals (e.g., write tests for invalid inputs, then make them pass).
+- For multi-step tasks, state a brief plan:
+  1. [Step] -> verify: [check]
+  2. [Step] -> verify: [check]
+  3. [Step] -> verify: [check]
+
+---
+
+## Kvalitetssäkring (Innan svar)
+*Innan du svarar, kontrollera:*
+1. Har jag läst relevant befintlig kod?
+2. Är koden minimal och enkel?
+3. Har jag verifierat mina antaganden?
+4. Följer jag projektets stilguide?
+
+---
+
+## Project Stack
+- **Frontend:** Next.js 16, React 19, TypeScript 5 (Vercel) — Git submodule in `Frontend/`
+- **Backend:** Medusa v2.14 (Hetzner VPS)
+- **CMS:** Payload CMS
 - **Email:** Brevo
-- **Betalningar:** Stripe
+- **Payments:** Stripe
 
-## Regler
-- Svara alltid på svenska
-- Kort och vertikalt — ingen klumpig text
-- Svara kortfattat och strukturerat (rubriker/punktlistor), lätt att skanna visuellt
-- Pusha till GitHub ENDAST när användaren explicit säger "pusha"
-- Lägg aldrig till CSS/styling utan explicit godkännande
-- Kör npm update efter npm install
+## Core Rules & Workflow
+- **Språk:** Svara alltid på svenska. Använd engelska termer för kod/teknik där det underlättar.
+- Keep answers concise and vertical (headings and bullet lists for easy scanning).
+- Push to GitHub ONLY on explicit command ("pusha").
+- Do not add CSS or styling without explicit approval.
+- Run `npm update` after `npm install`.
+- Commit and push **inside** `Frontend/` first, then update the submodule pointer in the main repo.
+- **Troubleshooting & CSS rule:** Always check in order: (1) Logik/Data -> (2) State -> (3) Simplest CSS/DOM explanation (`z-index`, `display`, `position`) before using advanced devtools.
+- Use subagents sparingly. Keep conversations short.
+- Components communicate via CustomEvents (`toggleCompare`, `clearCompare`, `addToCart`).
 
-## Deploy
-- Frontend → Vercel (automatisk via GitHub push)
-- Backend → VPS via webhook (GitHub push till main)
-- SSH: `ssh -i C:/Users/nedal/.ssh/techpilots root@95.217.163.97`
-- Backend path på VPS: `/opt/medusa-backend/`
+## Deploy & Server
+- **Frontend:** Vercel (auto via GitHub push)
+- **Backend:** VPS via webhook (push to `main`)
+- **SSH:** `ssh -i C:/Users/nedal/.ssh/techpilots root@95.217.163.97`
+- **Backend path:** `/opt/medusa-backend/`
 
-## MCP-servrar
-- **dbhub** — SQL mot Medusa PostgreSQL-databasen
-- **github** — GitHub issues, PRs, commits
-- **brevo** — Email-kampanjer, kontakter, analytics
+## MCP Servers
+- `dbhub` (Medusa PostgreSQL)
+- `github` (issues/PRs)
+- `brevo` (Email/analytics)
+- `chrome-devtools` (permanent): `C:\Program Files\Google\Chrome Dev\Application\chrome.exe`
 
-- **chrome-devtools** — aktiverad permanent för visuell verifiering av frontend-ändringar. Avaktivera ALDRIG denna
-- Chrome-sökväg: `C:\Program Files\Google\Chrome Dev\Application\chrome.exe` (Chrome Dev-kanalen, inte stable) — konfigurerad i `.mcp.json` via `--executablePath`
+## Key Documentation
+- `ARCHITECTURE.md` — System architecture & folder structure
+- `docs/AUDIT.md` — VPS, security, troubleshooting & Disaster Recovery
+- `docs/MARKETING.md` — Brand strategy, channels & local focus
+- `docs/BOKFÖRING.md` — Economy & accounting routines
+- `docs/KEYS.md` — API keys & secrets
+- `docs/UX-UI.md` — Visual identity, design system & UX audit
+- `docs/ROADMAP.md` — Future features & plans
+- `docs/SOLUTIONS.md` — Known bug fixes
+- `docs/ITEGRA-PRODUCTS.md` — Product sync & supplier data
+- `docs/GLOSSARY.md` — Glossary of terms
 
-Borttagna ur `.mcp.json` (drog tokens utan att användas): fetch, Slack, Google Drive (disabled på kontonivå).
-
-## Kredit-/tokenhantering
-- Var sparsam med underagenter (Agent-tool) — starta bara vid uppgifter som verkligen kräver bred sökning eller isolerad granskning
-- Håll konversationer korta och avgränsade per uppgift. Använd `/compact` när en lång session måste fortsätta, `/clear` eller ny session vid ny uppgift
-- Föreslå `claude-md-management:revise-claude-md` efter större arbetssessioner (ny funktion, arkitekturbeslut) innan sessionen stängs, så beslut hamnar här istället för att försvinna med tråden
-- Kontrollera `/mcp` då och då för nya inaktiva/oanvända MCP-servrar som laddas i onödan
-- **Vid felsökning (troubleshooting): börja alltid med den mest självklara/enklaste förklaringen och lösningen först** — kolla CSS-grunder (z-index, stacking context, display, position) innan du gräver djupare i DOM-inspektion, race conditions eller ovanliga edge-cases. Undvik att dra in avancerade verktyg (browser-devtools-grävande, elementFromPoint, shadow-DOM-sökningar) för problem som troligen har en enkel orsak
-
-## Viktiga filer
-- `docs/KEYS.md` — var alla nycklar finns
-- `docs/AUDIT.md` — felsökning och best practice
-- `.mcp.json` — MCP-konfiguration (ej i git)
-- `docs/MARKETING.md` — marketing agent för Techpilots Webshop & Studio
-- `docs/` — övrig dokumentation (GLOSSARY, ITEGRA-PRODUCTS, ROADMAP, BOKFÖRING)
-- `infra/` — serverkonfiguration och verktyg (medusa-nginx.conf, email-preview.html)
-
-## Kommandon
+## Commands
 
 ### Frontend (`Frontend/apps/frontend/`)
 ```bash
-npm run dev      # Starta dev-server på localhost:3000
-npm run build    # Bygg för produktion
-npm run lint     # Kör ESLint
-```
-
-### Backend (`/opt/medusa-backend/` på VPS)
-```bash
-ssh -i C:/Users/nedal/.ssh/techpilots root@95.217.163.97
-cd /opt/medusa-backend && npm run start
-```
-
-## Arkitektur
-
-### Frontend (Next.js 16 App Router)
-- `app/` — sidor och layouts (App Router)
-- `app/components/` — delade komponenter, grupperade efter ansvar (`product/`, `cart/`, `auth/`, `layout/`, `home/`, `checkout/`, `shared/`, `Header/`)
-  - `product/CompareBar.tsx` — flytande jämförelsebar + modal (komplex, hanterar mobil/desktop separat)
-  - `product/CompareContext.tsx` — global state för jämförelselista (localStorage + custom events)
-  - `product/ProductCard.tsx` — produktkort används överallt, lyssnar på `toggleCompare`/`clearCompare` events
-  - `Header/` — uppdelad i menuData, MobileHeader, MobileMenu, DesktopHeader, MegaMenu, index (state)
-- `app/produkter/[handle]/` — produktdetaljsida
-- `app/produktserier/[slug]/[handle]/` — produktseriesida
-
-### Kommunikationsmönster
-Komponenter kommunicerar via `window.dispatchEvent(new CustomEvent(...))` istället för props:
-- `toggleCompare` — lägg till/ta bort produkt från jämförelse
-- `clearCompare` — nollställ jämförelselistan
-- `addToCart` — lägg till i varukorg
-
-### Frontend är ett Git-submodul
-`Frontend/` är ett submodul till huvud-repot. Committa och pusha **inuti** `Frontend/` först, sedan uppdatera submodul-pekaren i huvud-repot.
-
-## Juridik & Returpolicy
-- Ångerrätt: 14 dagar enligt distansavtalslagen (INTE 30 dagar)
-- Itegra är leverantör — nämns aldrig i kundtexter
-- Stora varumärken (Asus, HP, Samsung) hanterar reklamationer direkt med kunden
-- Returer: kunden bekostas, produkten ska vara i originalskick
-
-## Textregler (hela frontenden)
-- Använd aldrig tankstreck (—) i kundsynliga texter. Punkt eller omformulering istället
-- Gästkassa ska alltid finnas. Tvinga aldrig konto vid köp
-
-## Sortimentsstrategi (Webshop)
-- Fokus: lågretursortiment (kablar, tillbehör, skärmskydd)
-- Stora märken med direktservice = kunden kontaktar tillverkaren
-- Fri frakt över 499 kr, 49 kr under
-- Dropshipping via Itegra (Komplett Distribution Sweden AB)
-
-## UX/UI & Frontend Design-instruktioner
-Se `docs/UX-UI.md` — fullständiga riktlinjer för visuell identitet, designsystem, motion design och en 16-punkters UX-audit. Läs den innan du granskar, bygger om eller skapar UX/UI-tung källkod (landningssidor, komponenter).
+npm run dev     # Dev-server (localhost:3000)
+npm run build   # Production build
+npm run lint    # Run ESLint code check

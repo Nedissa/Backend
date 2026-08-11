@@ -155,6 +155,14 @@
 | **State** | Intern data i en komponent som kan ändras | Formulär, toggle-knappar, laddningsstatus | När state ändras uppdateras UI:t automatiskt | `const [quantity, setQuantity] = useState(1)` |
 | **Hook (React)** | Funktion som ger React-funktionalitet | I alla funktionskomponenter | Återanvändbar logik utan att skriva klasser | `useState`, `useEffect`, `useCart` |
 | **Toast** | Liten notis-ruta som dyker upp tillfälligt och försvinner automatiskt | Vid feedback till användaren efter en handling | Ger bekräftelse eller felmeddelande utan att blockera sidan | "Kan bara jämföra samma produkttyp" — visas i 4 sekunder och försvinner |
+| **CLS (Cumulative Layout Shift)** | Mått på hur mycket innehåll hoppar/flyttar sig medan sidan laddar | Vid prestandagranskning | Layout-hopp är irriterande och sänker Google-rankingen | En bild dyker upp och skjuter ner texten under — dålig CLS |
+| **LCP (Largest Contentful Paint)** | Tiden det tar innan det största/viktigaste elementet syns på skärmen | Vid prestandagranskning | Google-mått på hur snabb sidan känns för besökaren | Hero-bilden på produktsidan är oftast det som räknas som LCP |
+| **`next/image`** | Next.js inbyggda bildkomponent för automatisk bildoptimering | Istället för vanlig `<img>`-tagg | Komprimerar, formatkonverterar och lazy-loadar bilder automatiskt | `<Image src={...} />` istället för `<img src={...} />` |
+| **Skeleton loader** | Grå "spöktext/spökbild"-placeholder som visas medan innehåll laddar | Vid datahämtning i UI | Ger visuell feedback och undviker layout-hopp jämfört med tom yta eller spinner | Produktkortets kontur visas i grått innan bilden och priset laddat in |
+| **`prefers-reduced-motion`** | Användarens systeminställning för färre animationer | I CSS/JS när du bygger animationer | Vissa besökare mår dåligt av rörelse/animationer och har stängt av det i sin dator/telefon | Slide-animationer i produktgalleriet bör stängas av om detta är satt |
+| **a11y (Accessibility/Tillgänglighet)** | Hur väl sidan fungerar för personer med funktionsnedsättning | Alltid vid UI-utveckling | Lagkrav (WCAG) och gör sajten användbar för fler | Skärmläsarstöd, tangentbordsnavigering, kontrastnivåer |
+| **Monolit (kodmässigt)** | En enda stor fil/komponent som hanterar väldigt många olika saker | När en komponent växer okontrollerat | Svår att underhålla, testa och felsöka | En 900-raders produktsida-komponent som sköter galleri, tabs, kundvagn och recensioner i en fil |
+| **Dead-end länk** | Länk eller knapp som inte leder någonstans meningsfullt | Vid granskning av UI | Skapar en återvändsgränd för besökaren och känns oseriöst | En Instagram-knapp som bara länkar till instagram.com istället för ert konto |
 
 </details>
 
