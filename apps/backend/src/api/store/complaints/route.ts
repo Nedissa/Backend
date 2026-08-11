@@ -5,7 +5,7 @@ export const GET = async (
   req: MedusaRequest,
   res: MedusaResponse
 ) => {
-  const customerId = req.query.customer_id as string
+  const customerId = ((req as any).auth_context?.actor_id as string) || (req.query.customer_id as string)
 
   if (!customerId) {
     return res.json({ complaints: [] })
