@@ -36,30 +36,50 @@ export const PATCH = async (
       if (customer) {
         const resolvedDate = new Date().toLocaleDateString("sv-SE", { year: "numeric", month: "long", day: "numeric" })
 
-        await fetch("https://a.klaviyo.com/api/events", {
-          method: "POST",
-          headers: {
-            Authorization: `Klaviyo-API-Key ${process.env.KLAVIYO_API_KEY!}`,
-            "content-type": "application/json",
-            revision: "2024-10-15",
-          },
-          body: JSON.stringify({
-            data: {
-              type: "event",
-              attributes: {
-                properties: {
-                  firstName: customer.first_name || "",
-                  caseNumber: complaint.id,
-                  resolution: "Åtgärdad",
-                  resolvedDate,
-                  message: complaint.description || "",
-                },
-                metric: { data: { type: "metric", attributes: { name: "Claim Resolved" } } },
-                profile: { data: { type: "profile", attributes: { email: customer.email } } },
-              },
+        await Promise.allSettled([
+          fetch("https://api.brevo.com/v3/smtp/email", {
+            method: "POST",
+            headers: {
+              "api-key": process.env.BREVO_API_KEY!,
+              "content-type": "application/json",
             },
+            body: JSON.stringify({
+              to: [{ email: customer.email }],
+              templateId: 4,
+              params: {
+                firstName: customer.first_name || "",
+                caseNumber: complaint.id,
+                resolution: "Åtgärdad",
+                resolvedDate,
+                message: complaint.description || "",
+              },
+            }),
           }),
-        })
+          fetch("https://a.klaviyo.com/api/events", {
+            method: "POST",
+            headers: {
+              Authorization: `Klaviyo-API-Key ${process.env.KLAVIYO_API_KEY!}`,
+              "content-type": "application/json",
+              revision: "2024-10-15",
+            },
+            body: JSON.stringify({
+              data: {
+                type: "event",
+                attributes: {
+                  properties: {
+                    firstName: customer.first_name || "",
+                    caseNumber: complaint.id,
+                    resolution: "Åtgärdad",
+                    resolvedDate,
+                    message: complaint.description || "",
+                  },
+                  metric: { data: { type: "metric", attributes: { name: "Claim Resolved" } } },
+                  profile: { data: { type: "profile", attributes: { email: customer.email } } },
+                },
+              },
+            }),
+          }),
+        ])
       }
     }
 

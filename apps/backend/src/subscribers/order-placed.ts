@@ -58,15 +58,38 @@ export default async function orderPlacedHandler({
     const totalStr = formatPrice(order.total as any ?? 0)
     const itemList = items.map((i) => `${i.title} x${i.quantity}`).join(", ")
 
+    const klaviyoHeaders = {
+      Authorization: `Klaviyo-API-Key ${process.env.KLAVIYO_API_KEY!}`,
+      "content-type": "application/json",
+      revision: "2024-10-15",
+    }
+
     await Promise.allSettled([
-      // Orderbekräftelse till kund via Klaviyo event "Order Placed" (triggar Flow)
+      // Orderbekräftelse till kund via Brevo mall 1
+      fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: { "api-key": process.env.BREVO_API_KEY!, "content-type": "application/json" },
+        body: JSON.stringify({
+          to: [{ email: order.email }],
+          templateId: 1,
+          params,
+        }),
+      }),
+      // Intern ordernotis via Brevo
+      fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: { "api-key": process.env.BREVO_API_KEY!, "content-type": "application/json" },
+        body: JSON.stringify({
+          sender: { name: "Techpilots Order", email: "info@techpilots.se" },
+          to: [{ email: "order@techpilots.se" }],
+          subject: `Ny order ${orderNumber} – ${totalStr}`,
+          htmlContent: `<!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="margin:0;padding:24px;font-family:sans-serif;background:#f5f5f5;"><div style="max-width:480px;background:#fff;border-radius:8px;padding:24px;border:1px solid #e5e5e5;"><h2 style="margin:0 0 16px;font-size:1rem;color:#111;">Ny order ${orderNumber}</h2><p style="margin:0 0 6px;font-size:0.875rem;color:#555;"><strong>Kund:</strong> ${address?.first_name || ""} ${address?.last_name || ""} &lt;${order.email}&gt;</p><p style="margin:0 0 6px;font-size:0.875rem;color:#555;"><strong>Produkter:</strong> ${itemList}</p><p style="margin:0 0 6px;font-size:0.875rem;color:#555;"><strong>Totalt:</strong> ${totalStr}</p><p style="margin:0 0 6px;font-size:0.875rem;color:#555;"><strong>Leveranssätt:</strong> ${shippingName}</p>${address ? `<p style="margin:0;font-size:0.875rem;color:#555;"><strong>Adress:</strong> ${address.address_1}, ${address.postal_code} ${address.city}</p>` : ""}</div></body></html>`,
+        }),
+      }),
+      // Orderdata till Klaviyo för marketing-automation (skickar inget mail)
       fetch("https://a.klaviyo.com/api/events", {
         method: "POST",
-        headers: {
-          Authorization: `Klaviyo-API-Key ${process.env.KLAVIYO_API_KEY!}`,
-          "content-type": "application/json",
-          revision: "2024-10-15",
-        },
+        headers: klaviyoHeaders,
         body: JSON.stringify({
           data: {
             type: "event",
@@ -78,14 +101,9 @@ export default async function orderPlacedHandler({
           },
         }),
       }),
-      // Intern ordernotis via Klaviyo event
       fetch("https://a.klaviyo.com/api/events", {
         method: "POST",
-        headers: {
-          Authorization: `Klaviyo-API-Key ${process.env.KLAVIYO_API_KEY!}`,
-          "content-type": "application/json",
-          revision: "2024-10-15",
-        },
+        headers: klaviyoHeaders,
         body: JSON.stringify({
           data: {
             type: "event",
