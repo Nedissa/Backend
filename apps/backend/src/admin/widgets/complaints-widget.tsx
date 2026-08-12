@@ -6,6 +6,7 @@ const ComplaintsWidget = ({ data }: any) => {
   const [complaints, setComplaints] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [updating, setUpdating] = useState<string | null>(null)
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
 
   useEffect(() => {
     if (!data?.id) return
@@ -63,23 +64,29 @@ const ComplaintsWidget = ({ data }: any) => {
                     {complaint.created_at ? new Date(complaint.created_at).toLocaleDateString('sv-SE') : 'No date'}
                   </Text>
                 </div>
-                <div className="flex-shrink-0">
-                  {complaint.status === 'open' ? (
-                    <button
-                      onClick={() => handleStatusChange(complaint.id, 'resolved')}
-                      disabled={updating === complaint.id}
-                      className="px-3 py-1 text-xs rounded font-medium bg-ui-bg-subtle text-ui-fg-muted hover:bg-ui-bg-field disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                      Resolved
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => handleStatusChange(complaint.id, 'open')}
-                      disabled={updating === complaint.id}
-                      className="px-3 py-1 text-xs rounded font-medium bg-ui-bg-subtle text-ui-fg-muted hover:bg-ui-bg-field disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                      Open
-                    </button>
+                <div className="flex-shrink-0 relative">
+                  <button
+                    onClick={() => setOpenDropdown(openDropdown === complaint.id ? null : complaint.id)}
+                    disabled={updating === complaint.id}
+                    className="px-3 py-1.5 text-xs rounded font-medium bg-ui-bg-subtle text-ui-fg-muted hover:bg-ui-bg-field disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-1"
+                  >
+                    {complaint.status === 'open' ? 'Resolved' : 'Open'}
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                    </svg>
+                  </button>
+                  {openDropdown === complaint.id && (
+                    <div className="absolute right-0 mt-1 bg-ui-bg-base border border-ui-border-base rounded shadow-lg z-10">
+                      <button
+                        onClick={() => {
+                          handleStatusChange(complaint.id, complaint.status === 'open' ? 'resolved' : 'open')
+                          setOpenDropdown(null)
+                        }}
+                        className="block w-full text-left px-3 py-2 text-xs hover:bg-ui-bg-field transition-colors whitespace-nowrap"
+                      >
+                        {complaint.status === 'open' ? 'Mark as Resolved' : 'Mark as Open'}
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>
