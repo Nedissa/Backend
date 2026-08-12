@@ -68,23 +68,21 @@ const ComplaintsWidget = ({ data }: any) => {
                   <button
                     onClick={() => setOpenDropdown(openDropdown === complaint.id ? null : complaint.id)}
                     disabled={updating === complaint.id}
-                    className="px-3 py-1.5 text-xs rounded font-medium bg-ui-bg-subtle text-ui-fg-muted hover:bg-ui-bg-field disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-1"
+                    className="px-3 py-1.5 text-xs rounded font-medium bg-ui-bg-subtle text-ui-fg-muted hover:bg-ui-bg-field disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
-                    {complaint.status === 'open' ? 'Resolved' : 'Open'}
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                    </svg>
+                    {complaint.status?.toLowerCase() === 'open' ? 'Mark Resolved' : 'Mark Open'}
                   </button>
                   {openDropdown === complaint.id && (
-                    <div className="absolute right-0 mt-1 bg-ui-bg-base border border-ui-border-base rounded shadow-lg z-10">
+                    <div className="absolute right-0 mt-1 bg-ui-bg-base border border-ui-border-base rounded shadow-lg z-10 min-w-max">
                       <button
                         onClick={() => {
-                          handleStatusChange(complaint.id, complaint.status === 'open' ? 'resolved' : 'open')
+                          const newStatus = complaint.status?.toLowerCase() === 'open' ? 'resolved' : 'open'
+                          handleStatusChange(complaint.id, newStatus)
                           setOpenDropdown(null)
                         }}
-                        className="block w-full text-left px-3 py-2 text-xs hover:bg-ui-bg-field transition-colors whitespace-nowrap"
+                        className="block w-full text-left px-4 py-2 text-xs hover:bg-ui-bg-field transition-colors"
                       >
-                        {complaint.status === 'open' ? 'Mark as Resolved' : 'Mark as Open'}
+                        {complaint.status?.toLowerCase() === 'open' ? 'Resolved' : 'Open'}
                       </button>
                     </div>
                   )}
