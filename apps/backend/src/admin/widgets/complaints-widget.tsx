@@ -64,25 +64,34 @@ const ComplaintsWidget = ({ data }: any) => {
                     {complaint.created_at ? new Date(complaint.created_at).toLocaleDateString('sv-SE') : 'No date'}
                   </Text>
                 </div>
-                <div className="flex-shrink-0 relative">
+                <div className="flex-shrink-0 relative flex items-center gap-2">
+                  <div className={`w-2 h-2 rounded-sm ${complaint.status?.toLowerCase() === 'open' ? 'bg-ui-tag-red-bg' : 'bg-ui-tag-green-bg'}`} />
                   <button
                     onClick={() => setOpenDropdown(openDropdown === complaint.id ? null : complaint.id)}
                     disabled={updating === complaint.id}
                     className="px-3 py-1.5 text-xs rounded font-medium bg-ui-bg-subtle text-ui-fg-muted hover:bg-ui-bg-field disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
-                    {complaint.status?.toLowerCase() === 'open' ? 'Mark Resolved' : 'Mark Open'}
+                    {complaint.status?.toLowerCase() === 'open' ? 'Open' : 'Resolved'}
                   </button>
                   {openDropdown === complaint.id && (
-                    <div className="absolute right-0 mt-1 bg-ui-bg-base border border-ui-border-base rounded shadow-lg z-10 min-w-max">
+                    <div className="absolute right-0 mt-1 bg-ui-bg-base border border-ui-border-base rounded shadow-lg z-10">
                       <button
                         onClick={() => {
-                          const newStatus = complaint.status?.toLowerCase() === 'open' ? 'resolved' : 'open'
-                          handleStatusChange(complaint.id, newStatus)
+                          handleStatusChange(complaint.id, 'open')
+                          setOpenDropdown(null)
+                        }}
+                        className="block w-full text-left px-4 py-2 text-xs hover:bg-ui-bg-field transition-colors border-b border-ui-border-base"
+                      >
+                        Open
+                      </button>
+                      <button
+                        onClick={() => {
+                          handleStatusChange(complaint.id, 'resolved')
                           setOpenDropdown(null)
                         }}
                         className="block w-full text-left px-4 py-2 text-xs hover:bg-ui-bg-field transition-colors"
                       >
-                        {complaint.status?.toLowerCase() === 'open' ? 'Resolved' : 'Open'}
+                        Resolved
                       </button>
                     </div>
                   )}
