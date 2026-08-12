@@ -15,6 +15,9 @@ export const PATCH = async (
   try {
     const pgConnection = req.scope.resolve(ContainerRegistrationKeys.PG_CONNECTION)
 
+    const existing = await pgConnection("complaint").select("status").where("id", id)
+    const previousStatus = existing[0]?.status
+
     const updated = await pgConnection("complaint")
       .where("id", id)
       .update({ status, updated_at: new Date() })
@@ -26,7 +29,7 @@ export const PATCH = async (
       return res.status(404).json({ error: "Felanmälan hittades inte" })
     }
 
-    if (status === "resolved") {
+    if (status === "resolved" && previousStatus !== "resolved") {
       const customers = await pgConnection("customer")
         .select("email", "first_name")
         .where("id", complaint.customer_id)
