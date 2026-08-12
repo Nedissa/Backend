@@ -64,20 +64,23 @@ const ComplaintsWidget = ({ data }: any) => {
                     {complaint.created_at ? new Date(complaint.created_at).toLocaleDateString('sv-SE') : 'No date'}
                   </Text>
                 </div>
-                <div className="flex-shrink-0">
+                <div className="flex-shrink-0 relative flex items-center gap-2">
+                  <div className={`w-2 h-2 rounded-sm ${complaint.status?.toLowerCase() === 'open' ? 'bg-red-500' : 'bg-lime-400'}`} />
                   <button
                     onClick={() => setOpenDropdown(openDropdown === complaint.id ? null : complaint.id)}
                     disabled={updating === complaint.id}
+                    className="px-3 py-1.5 text-xs rounded font-medium bg-ui-bg-subtle text-ui-fg-muted hover:bg-ui-bg-field disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     {complaint.status?.toLowerCase() === 'open' ? 'Open' : 'Resolved'}
                   </button>
                   {openDropdown === complaint.id && (
-                    <div>
+                    <div className="absolute left-0 top-full mt-1 bg-ui-bg-base border border-ui-border-base rounded shadow-lg z-10">
                       <button
                         onClick={() => {
                           handleStatusChange(complaint.id, 'open')
                           setOpenDropdown(null)
                         }}
+                        className="block w-32 px-4 py-2 text-xs text-left hover:bg-ui-bg-field transition-colors border-b border-ui-border-base"
                       >
                         Open
                       </button>
@@ -86,6 +89,7 @@ const ComplaintsWidget = ({ data }: any) => {
                           handleStatusChange(complaint.id, 'resolved')
                           setOpenDropdown(null)
                         }}
+                        className="block w-32 px-4 py-2 text-xs text-left hover:bg-ui-bg-field transition-colors"
                       >
                         Resolved
                       </button>
