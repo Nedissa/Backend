@@ -86,7 +86,7 @@ export default async function orderPlacedHandler({
           htmlContent: `<!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="margin:0;padding:24px;font-family:sans-serif;background:#f5f5f5;"><div style="max-width:480px;background:#fff;border-radius:8px;padding:24px;border:1px solid #e5e5e5;"><h2 style="margin:0 0 16px;font-size:1rem;color:#111;">Ny order ${orderNumber}</h2><p style="margin:0 0 6px;font-size:0.875rem;color:#555;"><strong>Kund:</strong> ${address?.first_name || ""} ${address?.last_name || ""} &lt;${order.email}&gt;</p><p style="margin:0 0 6px;font-size:0.875rem;color:#555;"><strong>Produkter:</strong> ${itemList}</p><p style="margin:0 0 6px;font-size:0.875rem;color:#555;"><strong>Totalt:</strong> ${totalStr}</p><p style="margin:0 0 6px;font-size:0.875rem;color:#555;"><strong>Leveranssätt:</strong> ${shippingName}</p>${address ? `<p style="margin:0;font-size:0.875rem;color:#555;"><strong>Adress:</strong> ${address.address_1}, ${address.postal_code} ${address.city}</p>` : ""}</div></body></html>`,
         }),
       }),
-      // Orderdata till Klaviyo för marketing-automation (skickar inget mail)
+      // Orderdata till Klaviyo för marketing-automation
       fetch("https://a.klaviyo.com/api/events", {
         method: "POST",
         headers: klaviyoHeaders,
@@ -97,28 +97,6 @@ export default async function orderPlacedHandler({
               properties: params,
               metric: { data: { type: "metric", attributes: { name: "Order Placed" } } },
               profile: { data: { type: "profile", attributes: { email: order.email } } },
-            },
-          },
-        }),
-      }),
-      fetch("https://a.klaviyo.com/api/events", {
-        method: "POST",
-        headers: klaviyoHeaders,
-        body: JSON.stringify({
-          data: {
-            type: "event",
-            attributes: {
-              properties: {
-                orderNumber,
-                customerName: `${address?.first_name || ""} ${address?.last_name || ""}`.trim(),
-                customerEmail: order.email,
-                itemList,
-                total: totalStr,
-                shippingMethod: shippingName,
-                address: address ? `${address.address_1}, ${address.postal_code} ${address.city}` : "",
-              },
-              metric: { data: { type: "metric", attributes: { name: "Order Placed Internal" } } },
-              profile: { data: { type: "profile", attributes: { email: "order@techpilots.se" } } },
             },
           },
         }),
