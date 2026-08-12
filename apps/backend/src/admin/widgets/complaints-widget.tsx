@@ -1,5 +1,5 @@
 import { defineWidgetConfig } from "@medusajs/admin-sdk"
-import { Container, Heading, Text, Button, Select } from "@medusajs/ui"
+import { Container, Heading, Text } from "@medusajs/ui"
 import { useEffect, useState } from "react"
 
 const ComplaintsWidget = ({ data }: any) => {
@@ -56,22 +56,34 @@ const ComplaintsWidget = ({ data }: any) => {
         <div className="mt-4 space-y-4">
           {complaints.map((complaint: any) => (
             <div key={complaint.id} className="border border-ui-border-base rounded-lg p-3">
-              <Text className="font-medium text-sm">Order: {complaint.order_number || complaint.order_id}</Text>
-              <Text className="text-ui-fg-subtle text-sm mt-1">{complaint.description}</Text>
-              <div className="flex items-center justify-between mt-3 gap-2">
-                <Text className="text-ui-fg-muted text-xs">
-                  {complaint.created_at ? new Date(complaint.created_at).toLocaleDateString('sv-SE') : 'No date'}
-                </Text>
-                <select
-                  value={complaint.status}
-                  onChange={(e) => handleStatusChange(complaint.id, e.target.value)}
-                  disabled={updating === complaint.id}
-                  className="px-2 py-1 text-xs border border-ui-border-base rounded bg-ui-bg-field hover:bg-ui-bg-field-hover disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <option value="open">Open</option>
-                  <option value="resolved">Resolved</option>
-                </select>
+              <div className="flex items-start justify-between gap-2 mb-2">
+                <div className="flex-1">
+                  <Text className="font-medium text-sm">Order: {complaint.order_number || complaint.order_id}</Text>
+                  <Text className="text-ui-fg-muted text-xs mt-1">
+                    {complaint.created_at ? new Date(complaint.created_at).toLocaleDateString('sv-SE') : 'No date'}
+                  </Text>
+                </div>
+                <div className="flex-shrink-0">
+                  {complaint.status === 'open' ? (
+                    <button
+                      onClick={() => handleStatusChange(complaint.id, 'resolved')}
+                      disabled={updating === complaint.id}
+                      className="px-3 py-1 text-xs rounded font-medium bg-ui-bg-subtle text-ui-fg-muted hover:bg-ui-bg-field disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      Resolved
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleStatusChange(complaint.id, 'open')}
+                      disabled={updating === complaint.id}
+                      className="px-3 py-1 text-xs rounded font-medium bg-ui-bg-subtle text-ui-fg-muted hover:bg-ui-bg-field disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      Open
+                    </button>
+                  )}
+                </div>
               </div>
+              <Text className="text-ui-fg-subtle text-sm">{complaint.description}</Text>
             </div>
           ))}
         </div>
