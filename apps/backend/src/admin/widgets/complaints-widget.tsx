@@ -65,26 +65,22 @@ const ComplaintsWidget = ({ data }: any) => {
                   </Text>
                 </div>
                 <div className="flex-shrink-0 relative flex items-center gap-2">
-                  <div className={`w-2 h-2 rounded-sm ${complaint.status?.toLowerCase() === 'open' ? 'bg-red-500' : 'bg-green-500'}`} />
+                  <div className={`w-2 h-2 rounded-sm ${complaint.status?.toLowerCase() === 'open' ? 'bg-red-500' : 'bg-lime-400'}`} />
                   <button
                     onClick={() => setOpenDropdown(openDropdown === complaint.id ? null : complaint.id)}
                     disabled={updating === complaint.id}
-                    className={`px-3 py-1.5 text-xs rounded font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
-                      complaint.status?.toLowerCase() === 'resolved'
-                        ? 'bg-green-500 text-white hover:bg-green-600'
-                        : 'bg-ui-bg-subtle text-ui-fg-muted hover:bg-ui-bg-field'
-                    }`}
+                    className="px-3 py-1.5 text-xs rounded font-medium bg-ui-bg-subtle text-ui-fg-muted hover:bg-ui-bg-field disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     {complaint.status?.toLowerCase() === 'open' ? 'Open' : 'Resolved'}
                   </button>
                   {openDropdown === complaint.id && (
-                    <div className="absolute left-0 top-full mt-1 bg-ui-bg-base border border-ui-border-base rounded shadow-lg z-10">
+                    <div className="absolute left-0 top-full mt-1 bg-ui-bg-base border border-ui-border-base rounded shadow-lg z-10 w-24">
                       <button
                         onClick={() => {
                           handleStatusChange(complaint.id, 'open')
                           setOpenDropdown(null)
                         }}
-                        className="block w-full text-left px-4 py-2 text-xs hover:bg-ui-bg-field transition-colors border-b border-ui-border-base"
+                        className="block w-full px-4 py-2 text-xs hover:bg-ui-bg-field transition-colors border-b border-ui-border-base h-8 flex items-center"
                       >
                         Open
                       </button>
@@ -93,7 +89,7 @@ const ComplaintsWidget = ({ data }: any) => {
                           handleStatusChange(complaint.id, 'resolved')
                           setOpenDropdown(null)
                         }}
-                        className="block w-full text-left px-4 py-2 text-xs hover:bg-ui-bg-field transition-colors"
+                        className="block w-full px-4 py-2 text-xs hover:bg-ui-bg-field transition-colors h-8 flex items-center"
                       >
                         Resolved
                       </button>
