@@ -1,32 +1,63 @@
-# MARKETING.md — Techpilots Marketing Agent
+# SOLUTIONS.md — Kända Problem & Lösningar
 
-## Varumärken & Positionering
+## Email/Mail-flöden
 
-### 1. Webshop (Konsument)
-- **Fokus:** E-handel (TV, datorer, ljud, gaming)
-- **Målgrupp:** Konsumenter 18–45 år
-- **Ton:** Modern, kunnig, tillgänglig
-- **USP:** Expertis + bra priser + snabb leverans
+### Brevo IP-blockering (Återkommande)
+**Problem:** Kundmailet från registrering/beställning når inte kunden. Du får istället ett säkerhetsvarnmail från Brevo ("Security Alert: Verify a new IP").
 
-### 2. Digitala Tjänster (B2B / Borås)
-- **Fokus:** Skräddarsydd webbutveckling, e-handel & VPS/infrastruktur (Next.js, React, Tailwind)
-- **Sida:** `https://techpilots.vercel.app/tjanster` (prod: `techpilots.se/tjanster`)
-- **Målgrupp:** Företag & scale-ups i Borås med omnejd
-- **Ton:** Exklusivt, genomtänkt, lokalt förankrat, tekniskt ledande
-- **USP:** Prestanda, konverteringsfokus & nära lokal service
+**Root cause:** Brevo hade IP-verifiering aktiverad för API-anrop. Vercel serverless-funktioner använder roterande utgående IP-adresser mellan varje anrop, så varje ny registrering från en "okänd" IP blockeras av Brevo och mailet skickas aldrig.
 
-## Tilläggsområden & Tillväxt
-- **Lokal närvaro (B2B):** Lokalt nätverkande, event, sponsring i Sjuhärad/Borås samt Google My Business.
-- **Social Proof & Tillit:** Kundcase (t.ex. Sagateatern), Trustpilot-recensioner och tekniska benchmarks (Lighthouse 100/100).
-- **Automation & Retargeting:** Övergivna varukorgar (Webshop), retargeting-annonser på besökare samt nurturing-sekvenser för B2B-leads.
-- **Innehållsstrategi:** Bygga auktoritet via tekniska blogginlägg och jämförelseguider ("Next.js vs WordPress", "VPS vs Managed").
+**Lösning:**
+1. Logga in på brevo.com
+2. Gå till **Settings → Security → Authorized IPs**
+3. Klicka **"Deactivate for API keys"** (under "API keys ● Activated")
+4. Testa registrera igen — mailet ska nu gå fram direkt
 
-## Kanaler & Verktyg
-- **Kanaler:** Sociala medier (IG, LinkedIn, TikTok), SEO (inkl. lokal "Webbutveckling Borås"), Meta/Google Ads, Brevo (Email/automation)
-- **MCP-servrar:** `brevo` (kampanjer/kontakter), `github` (SEO/UX-ändringar), `chrome-devtools` (visuell verifiering)
+**Notering:** Detta gjordes senast 2026-08-12. Testade mailflöden som då bekräftades fungerande:
+- Välkomstmail (registrering) ✓
+- Lösenordsåterställning ✓
+- Orderbekräftelse ✓
+- Kontaktformulär (internt) ✓
+- Skadeanmälan mottagen (claim_received) ✓
 
-## Agentregler & Mål
-1. **Svenska & Konkret:** Leverera alltid färdig copy/innehåll, inte bara råd.
-2. **Separation:** Tydlig gräns mellan Webshop (tillgänglig/produkt) och Tjänster (exklusiv/strategisk/lokal).
-3. **Funnel-tänk:** Anpassa budskap efter Awareness, Consideration eller Conversion.
-4. **Action-oriented:** Avsluta alltid med ett konkret nästa steg.
+---
+
+## VPS & Server
+
+### SSH timeout till VPS (Periodisk)
+**Problem:** SSH-anslutning till `95.217.163.97` timeout:ar, även om servern är igång och frisk.
+
+**Root cause:** Intermittent nätverksblockering mellan användarens ISP (Tele2) och Hetzners datacenter, troligt utlöst av bot-anfall/brute-force-försök mot servern som många leverantörer reagerar på.
+
+**Snabbaste lösning:**
+- Testa direkt på mobildata (använd ett annat nätverk) — om det fungerar där är felet lokalt/ISP-nivå
+- Använd **Hetzner webbkonsol** (VNC) istället för SSH medan blockeringen pågår
+- Vänta några minuter och testa SSH igen — brukar lösa sig själv
+
+**Om SSH fortfarande inte fungerar senare:**
+1. Verifiera servern är uppe i Hetzner Cloud Console
+2. Traceroute visar vägen in i Hetzners molnnätverk? Om ja, är det inte ett routingproblem
+3. Gå till webbkonsolen och kolla `systemctl status ssh`, `ufw status`, `ip a` — servern själv är troligt frisk
+4. Kontakta Hetzner support med traceroute-output om det kvarstår
+
+**Referens:** Dokumenterat 2026-08-12 efter flera återkommande tillfällen av samma problem.
+
+---
+
+## Medusa Admin
+
+### Admin-användarkonton
+**Aktuell status (2026-08-12):**
+- `admin@techpilots.se` / `Admin123!` — fungerar ✓
+- `nedalissa@outlook.com` — borttagen (var bara för Medusa Admin, behövdes inte längre)
+
+Se `docs/KEYS.md` för inloggningsuppgifter.
+
+---
+
+## Checklist före deployment
+
+- [ ] Brevo IP-verifiering för API-nycklar är **av** (Settings → Security → Authorized IPs → "Deactivate for API keys")
+- [ ] Alla mailmallar i Brevo är **Active**: password_reset, order_confirmation, claim_received
+- [ ] Testmail från Brevo når inbox (inte spam/blockerad)
+- [ ] VPS SSH fungerar, eller webbkonsolen är åtkomlig via Hetzner
