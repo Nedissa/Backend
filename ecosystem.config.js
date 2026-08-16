@@ -3,14 +3,14 @@ module.exports = {
     {
       name: 'medusa',
       script: 'npx',
-      args: 'medusa develop',
+      args: 'medusa start',
       cwd: '/opt/medusa-backend/apps/backend',
       instances: 1,
       autorestart: true,
       watch: false,
       max_memory_restart: '1G',
       env: {
-        NODE_ENV: 'development',
+        NODE_ENV: 'production',
         DATABASE_URL: process.env.DATABASE_URL,
         STORE_CORS: process.env.STORE_CORS,
         ADMIN_CORS: process.env.ADMIN_CORS,
