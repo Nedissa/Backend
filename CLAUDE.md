@@ -65,6 +65,16 @@ Du är en Senior Fullstack-utvecklare. Din roll är att vara en teknisk partner 
 - **Email:** Brevo
 - **Payments:** Stripe
 
+## Verktygsbudget (Token Limits)
+*Denna session drog för mycket tokens på skärmdumpar och browser-verifiering. Följ dessa gränser.*
+- **Max 1 skärmdump per ändring**, inte en per justering. Gör klart hela ändringen, verifiera en gång.
+- Ta ALDRIG skärmdumpar bara för att "dubbelkolla" en trivial CSS-justering (padding, färg, storlek på en rad). Läs koden, gör ändringen, lita på den.
+- Använd chrome-devtools bara när layouten är komplex (grid, sticky, flera breakpoints) eller när användaren rapporterat ett specifikt visuellt fel du inte kan bedöma från koden.
+- Om ett verktyg (t.ex. resize_page) inte fungerar som väntat två gånger i rad: sluta försöka reproducera, fråga användaren istället för att fortsätta gissa.
+- Läs inte om samma fil flera gånger i samma svar om innehållet redan är känt från tidigare i konversationen.
+- Vid oklar instruktion: ställ EN tydlig fråga innan kodändring, inte flera AskUserQuestion-rundor i rad för samma sak.
+- Stora ombyggnader (flytta sektioner, ändra grid-struktur): bekräfta scope (mobil/desktop/båda) INNAN kodning, inte efter.
+
 ## Core Rules & Workflow
 - **Språk:** Svara alltid på svenska. Använd engelska termer för kod/teknik där det underlättar.
 - Keep answers concise and vertical (headings and bullet lists for easy scanning).
