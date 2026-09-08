@@ -198,6 +198,23 @@
 
 </details>
 
+<details>
+<summary><strong>GEO / AI-optimering</strong></summary>
+
+| Begrepp | Vad | När | Varför | Exempel |
+|---|---|---|---|---|
+| **GEO** | Generative Engine Optimization — SEO för AI-svar. Kallas även AIO (AI Overviews) eller AEO (Answer Engine Optimization) | Vid optimering för att bli rekommenderad av AI-modeller | Allt fler söker via ChatGPT/Perplexity/Google AI Overviews istället för klassisk sökning | Skriva fakta-block AI:n vågar citera, istället för ren marknadsföringstext |
+| **Citability** | Hur väl en sida lämpar sig att citeras som källa av en AI | AI-sökmotorer väljer källor att länka till i sina svar | Trovärdig data, tydliga siffror och definitiva påståenden ökar chansen att bli citerad | "14 dagars ångerrätt" citeras hellre än "generösa returvillkor" |
+| **RAG (Retrieval-Augmented Generation)** | Tekniken bakom AI-sök: sökmotorn hämtar relevanta sidor (Retrieval) och matar in dem i en AI-modell som sammanfattar svaret | Alltid, när en AI-sökmotor svarar på en fråga | Sidan måste vara skriven så AI:ns hämtningsfas förstår innehållet utan att gissa | Server-renderad text (SSR) läses direkt, till skillnad från innehåll som bara laddas via JavaScript |
+| **Agentisk webbläsning** | AI-agenter (t.ex. ChatGPT Operator, Claude) som navigerar och interagerar med en sajt åt användaren, inte bara läser den | Vid granskning av tillgänglighet för AI-agenter (Lighthouse har en egen kategori för detta) | Knappar utan `aria-label`, otydlig struktur eller JS-beroende innehåll gör sajten svårnavigerad för agenter | En ikonknapp utan text ("lägg i varukorg") kan en agent missa helt |
+| **WebMCP** | Ny öppen standard där en sajt exponerar strukturerade "verktyg" (sök, lägg i varukorg, checka ut) som en AI-agent kan anropa direkt, istället för att simulera klick i DOM:en | Framtida steg, fortfarande experimentellt | Snabbare och säkrare AI-agent-interaktion än att agenten gissar sig fram i gränssnittet | En agent anropar `add_to_cart(sku)` direkt istället för att leta upp och klicka på en knapp |
+| **Brand Mentions / Unlinked Brand Equity** | Hur mycket ett varumärke omnämns på andra platser (forum, nyheter, sociala medier) även utan klickbar länk | Bygger varumärkets "entity" i AI-modellers förståelse | AI-modeller väger in omnämnanden, inte bara länkar, när de bedömer trovärdighet | Techpilots omnämnt i ett tekniktforum utan länk stärker ändå varumärket i AI:ns ögon |
+| **Schema markup / JSON-LD** | Strukturerad data inbäddad i sidans `<head>` eller `<body>` som beskriver innehållet maskinläsbart | På produkt-, kategori- och FAQ-sidor | Både traditionella sökmotorer och AI-crawlers läser detta för att förstå pris, lager, betyg och frågor utan att gissa | `Product`, `BreadcrumbList`, `Organization` och `FAQPage`-scheman finns idag på techpilots.vercel.app |
+| **llms.txt** | Framväxande standard: en enkel textfil i sajtens rot som sammanfattar sajten och länkar viktiga sidor, riktad till AI-system | Komplement till `robots.txt` | Ger AI-agenter en snabb översikt utan att behöva crawla hela sajten | `techpilots.vercel.app/llms.txt` |
+| **Konversationsvänligt språk** | Text skriven för att besvara långa, resonerande frågor, inte bara sökord | I produktbeskrivningar och FAQ | Människor ställer komplexa frågor till AI ("vad är skillnaden på X och Y för en mindre webbshop?") | En text som direkt jämför två produkter svarar bättre på en sådan fråga än separata produktblad |
+
+</details>
+
 ---
 
 <details>
