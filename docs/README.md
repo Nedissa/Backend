@@ -1,25 +1,30 @@
 # Dokumentation — index
 
-Kort översikt över vad varje fil i `docs/` innehåller.
+Kort översikt över vad varje fil i `docs/` innehåller. Filerna ligger grupperade i ämnesmappar.
 
-## Kod & drift
+## drift/ — Kod & infrastruktur
 - **AUDIT.md** — stor checklista för hela projektet: kod, infrastruktur, säkerhet, prestanda. Körs som en genomgång, bockas av när åtgärdat.
 - **ARCHITECTURE.md** — mappstruktur och teknisk arkitektur (Next.js App Router, submoduler, komponentindelning).
-- **UX-UI.md** — designdirektiv: visuell identitet, designsystem, motion design, 16-punkters UX-audit. Läs innan UX/UI-tung kod skrivs eller granskas.
 - **SOLUTIONS.md** — teknisk logg över lösta buggar och hur de löstes.
-- **ROADMAP.md** — vad som är planerat framåt.
+- **CORE-WEB-VITALS-CHECKLIST.md** — checklista för prestandamätning (LCP, CLS, INP).
 - **KEYS.md** — var alla API-nycklar och miljövariabler finns. Gitignorad, pushas ALDRIG till GitHub.
 
-## Ordlista & sortiment
-- **GLOSSARY.md** — ordlista för webbutveckling/projektet.
-- **ITEGRA-PRODUCTS.md** — leverantören Itegras sortiment, varumärken, kontaktuppgifter.
+## design/ — UX/UI & designbeslut
+- **UX-UI.md** — designdirektiv: visuell identitet, designsystem, motion design, 16-punkters UX-audit. Läs innan UX/UI-tung kod skrivs eller granskas.
+- **SEVENLAW-AUDIT.md** — genomgång av tjänstesajten mot Crawford's Seven Laws of Web Design.
+- **historik/** — arkiverade designbeslut från tidigare AI-sessioner (döpt efter datum). Beskriver VARFÖR något byggdes som det gjorde, inte hur koden ser ut idag. Två filer nämner den gamla mappen `app/webbstudio/` — den heter numera `app/tjanster/` efter ett namnbyte, men besluten som beskrivs gäller fortfarande.
 
-## Verksamhet
+## verksamhet/ — Ekonomi, marknad, sortiment, plan
 - **BOKFÖRING.md** — bolagsstruktur och ekonomi. Inget med kod att göra.
 - **MARKETING.md** — instruktioner för marketing-agenten (Techpilots Webshop & Studio).
+- **ROADMAP.md** — vad som är planerat framåt.
+- **ITEGRA-PRODUCTS.md** — leverantören Itegras sortiment, varumärken, kontaktuppgifter.
 
-## Historik
-- **historik/** — arkiverade designbeslut från tidigare AI-sessioner (döpt efter datum). Beskriver VARFÖR något byggdes som det gjorde, inte hur koden ser ut idag. Två filer nämner den gamla mappen `app/webbstudio/` — den heter numera `app/tjanster/` efter ett namnbyte, men besluten som beskrivs gäller fortfarande.
+## juridik/ — Legal & regelefterlevnad
+- **GDPR.md** — kravspecifikation för GDPR-anpassad cookie banner (samtyckeslösning).
+
+## Direkt i docs/
+- **GLOSSARY.md** — ordlista för webbutveckling/projektet.
 
 ---
 

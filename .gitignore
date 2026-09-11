@@ -1,4 +1,4 @@
-docs/KEYS.md
+docs/drift/KEYS.md
 .env
 .env.*
 !.env.example

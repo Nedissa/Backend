@@ -99,15 +99,20 @@ Du är en Senior Fullstack-utvecklare. Din roll är att vara en teknisk partner 
 - `chrome-devtools` (permanent): `C:\Program Files\Google\Chrome Dev\Application\chrome.exe`
 
 ## Key Documentation
-- `ARCHITECTURE.md` — System architecture & folder structure
-- `docs/AUDIT.md` — VPS, security, troubleshooting & Disaster Recovery
-- `docs/MARKETING.md` — Brand strategy, channels & local focus
-- `docs/BOKFÖRING.md` — Economy & accounting routines
-- `docs/KEYS.md` — API keys & secrets
-- `docs/UX-UI.md` — Visual identity, design system & UX audit
-- `docs/ROADMAP.md` — Future features & plans
-- `docs/SOLUTIONS.md` — Known bug fixes
-- `docs/ITEGRA-PRODUCTS.md` — Product sync & supplier data
+Filerna i `docs/` ligger grupperade i ämnesmappar. Se `docs/README.md` för fullständigt index.
+- `docs/drift/ARCHITECTURE.md` — System architecture & folder structure
+- `docs/drift/AUDIT.md` — VPS, security, troubleshooting & Disaster Recovery
+- `docs/drift/SOLUTIONS.md` — Known bug fixes
+- `docs/drift/CORE-WEB-VITALS-CHECKLIST.md` — Performance checklist
+- `docs/drift/KEYS.md` — API keys & secrets (gitignored)
+- `docs/design/UX-UI.md` — Visual identity, design system & UX audit
+- `docs/design/SEVENLAW-AUDIT.md` — Seven Laws of Web Design audit
+- `docs/design/historik/` — Archived design decisions
+- `docs/verksamhet/MARKETING.md` — Brand strategy, channels & local focus
+- `docs/verksamhet/BOKFÖRING.md` — Economy & accounting routines
+- `docs/verksamhet/ROADMAP.md` — Future features & plans
+- `docs/verksamhet/ITEGRA-PRODUCTS.md` — Product sync & supplier data
+- `docs/juridik/GDPR.md` — GDPR cookie consent requirements
 - `docs/GLOSSARY.md` — Glossary of terms
 
 ## Commands

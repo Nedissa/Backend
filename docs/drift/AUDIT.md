@@ -388,6 +388,21 @@ tail -f /var/log/nginx/access.log # Inkommande requests
 
 ---
 
+### 9.2.1 SSL-certifikat (Certbot / Let's Encrypt)
+- [ ] Certbot är installerat: `certbot --version`
+- [ ] `certbot.timer` är aktiv och körs automatiskt två gånger dagligen: `systemctl status certbot.timer`
+- [ ] Certifikaten täcker rätt domäner: `api.techpilots.se`, `cms.techpilots.se`
+- [ ] Ingen manuell förnyelse behövs — timern sköter det automatiskt så länge servern är igång
+
+**Snabbkoll Certbot:**
+```bash
+certbot certificates              # Lista cert + utgångsdatum
+systemctl status certbot.timer    # Är auto-förnyelse aktiv?
+certbot renew --dry-run           # Testa förnyelseflödet utan att faktiskt förnya
+```
+
+---
+
 ### 9.3 PostgreSQL
 - [ ] PostgreSQL körs: `systemctl status postgresql`
 - [ ] Lyssnar endast på localhost — inte publik IP:
