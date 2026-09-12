@@ -226,7 +226,18 @@
       "Bash(rm -f /f/techpilots-starter-kit/Backend/apps/backend/static/*.webp /f/techpilots-starter-kit/Backend/apps/backend/static/*.jpg /f/techpilots-starter-kit/Backend/apps/backend/static/*.png *)",
       "Bash(vercel git *)",
       "Bash(vercel --prod)",
-      "Bash(git check-ignore *)"
+      "Bash(git check-ignore *)",
+      "Bash(git reset *)",
+      "Bash(powershell -Command \"Get-Process -Id 22924 | Select-Object Path\")",
+      "Bash(powershell -Command \"\\(Get-WmiObject Win32_Process -Filter \\\\\"ProcessId=22924\\\\\"\\).CommandLine\")",
+      "Bash(perl -0777 -pi -e \"s/<span className=\\\\\"text-\\\\[#c4c4c0\\\\] block\\\\\">\\\\{row1 \\\\|\\\\| '\\\\x{A0}'\\\\}<\\\\/span>\\\\n      <span className=\\\\\"text-\\\\[#c4c4c0\\\\] block\\\\\">\\\\{row2 \\\\|\\\\| '\\\\x{A0}'\\\\}<\\\\/span>/<span className=\\\\\"text-[#c4c4c0] block\\\\\">{row1}<\\\\/span>\\\\n      {row2 && <span className=\\\\\"text-[#c4c4c0] block\\\\\">{row2}<\\\\/span>}/\" ProjectPageTemplate.tsx)",
+      "Bash(xxd)",
+      "Bash(sed -i \"33s/.*/      <span className=\\\\\"text-[#c4c4c0] block\\\\\">{row1}<\\\\/span>/\" ProjectPageTemplate.tsx)",
+      "Bash(sed -i \"34s/.*/      {row2 \\\\&\\\\& <span className=\\\\\"text-[#c4c4c0] block\\\\\">{row2}<\\\\/span>}/\" ProjectPageTemplate.tsx)",
+      "Bash(sed -i '293s/border-black\\\\/15/border-black\\\\/25/' ProjectPageTemplate.tsx)",
+      "Bash(sed -i '442s/border-black\\\\/15/border-black\\\\/25/' ProjectPageTemplate.tsx)",
+      "Bash(curl -s -o /tmp/lighthouse.svg \"https://cdn.simpleicons.org/lighthouse\")",
+      "Bash(cp /tmp/lighthouse.svg \"f:/Techpilots/Frontend/apps/frontend/public/icons/brands/lighthouse.svg\" *)"
     ],
     "additionalDirectories": [
       "\\tmp",
