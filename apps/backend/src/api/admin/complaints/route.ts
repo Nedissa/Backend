@@ -1,5 +1,5 @@
 import { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
-import { ContainerRegistrationKeys } from "@medusajs/framework/utils"
+import { ContainerRegistrationKeys, generateEntityId } from "@medusajs/framework/utils"
 
 export const GET = async (
   req: MedusaRequest,
@@ -38,7 +38,7 @@ export const POST = async (
   try {
     const pgConnection = req.scope.resolve(ContainerRegistrationKeys.PG_CONNECTION)
 
-    const complaintId = `complaint_${Math.random().toString(36).substr(2, 9)}`
+    const complaintId = generateEntityId("", "complaint")
     const now = new Date()
 
     await pgConnection("complaint").insert({

@@ -5,7 +5,9 @@ export const GET = async (
   req: MedusaRequest,
   res: MedusaResponse
 ) => {
-  const customerId = ((req as any).auth_context?.actor_id as string) || (req.query.customer_id as string)
+  // Endast den inloggade kundens eget id används — aldrig ett värde från query,
+  // annars kan vem som helst läsa en annan kunds klagomålshistorik (IDOR).
+  const customerId = (req as any).auth_context?.actor_id as string | undefined
 
   if (!customerId) {
     return res.json({ complaints: [] })
@@ -31,11 +33,18 @@ export const POST = async (
   req: MedusaRequest,
   res: MedusaResponse
 ) => {
-  const { customer_id, order_id, description } = req.body as any
+  // customer_id kommer alltid från den inloggade sessionen, aldrig från request body,
+  // annars kan vem som helst skapa ett klagomål i en annan kunds namn.
+  const customerId = (req as any).auth_context?.actor_id as string | undefined
+  const { order_id, description } = req.body as any
 
-  if (!customer_id || !order_id || !description) {
+  if (!customerId) {
+    return res.status(401).json({ error: "Inloggning krävs" })
+  }
+
+  if (!order_id || !description) {
     return res.status(400).json({
-      error: "customer_id, order_id och description krävs",
+      error: "order_id och description krävs",
     })
   }
 
@@ -47,7 +56,7 @@ export const POST = async (
 
     await pgConnection("complaint").insert({
       id: complaintId,
-      customer_id,
+      customer_id: customerId,
       order_id,
       description,
       status: "open",
@@ -58,7 +67,7 @@ export const POST = async (
     res.status(201).json({
       complaint: {
         id: complaintId,
-        customer_id,
+        customer_id: customerId,
         order_id,
         description,
         status: "open",
