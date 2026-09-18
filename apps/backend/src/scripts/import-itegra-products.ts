@@ -249,7 +249,7 @@ export default async function importItegraProducts({
     }
     if (mainRow.specifications) {
       metadata.specifications = mainRow.specifications
-        .split(",")
+        .split("~")
         .map((entry) => {
           const [label, value] = entry.split(":").map((s) => s.trim());
           return { label, value };
