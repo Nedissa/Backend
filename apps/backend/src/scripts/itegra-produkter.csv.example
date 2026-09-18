@@ -1,0 +1,4 @@
+group;title;sku;manufacturer_sku;price_sek;color;color_hex;features;specifications;description;image_url
+hama-kabel;HAMA USB-C kabel 1m;HAMA-USBC-1M;00042521;99;Svart;;1 m|Längd,USB-C|Typ;Produktlinje:HAMA,Modell:USB-C 1m,Färg:Svart;Snabbladdande USB-C kabel, 1 meter;https://exempel.se/bild.jpg
+hp305xl;HP 305XL Bläckpatron;1169161-svart;3YM62AE#UUS;249;Svart;;240 sidor|Kapacitet,4 ml|Volym;Produktlinje:HP,Modell:305XL,Kapacitet:4 ml,Färg:Svart,Original:Ja;Original HP 305XL bläckpatron, svart. 240 sidor.;
+hp305xl;HP 305XL Bläckpatron;1169161-color;3YM63AE#UUS;229;Färg (cyan, magenta, gul);;165 sidor|Kapacitet,3 ml|Volym;Produktlinje:HP,Modell:305XL,Kapacitet:3 ml,Färg:Cyan/Magenta/Gul,Original:Ja;Original HP 305XL bläckpatron, tricolor. 165 sidor.;

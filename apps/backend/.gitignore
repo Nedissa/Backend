@@ -10,6 +10,9 @@ yarn-error.log
 coverage
 
 !src/**
+src/scripts/itegra-produkter.csv
+src/scripts/produkt-bilder/
+static/
 
 ./tsconfig.tsbuildinfo
 medusa-db.sql
