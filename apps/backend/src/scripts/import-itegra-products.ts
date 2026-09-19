@@ -173,10 +173,12 @@ export default async function importItegraProducts({
     const mainRow = groupRows[0];
     const allImageUrls: string[] = [];
     const colorToImageUrl: Record<string, string> = {};
+    const colorToImageUrls: Record<string, string[]> = {};
 
     for (const row of groupRows) {
       const imagePaths = findImagesForSku(row.sku, logger);
       let firstUrlForRow: string | undefined;
+      let urlsForRow: string[] = [];
 
       if (imagePaths.length > 0) {
         const uploaded = await fileModuleService.createFiles(
@@ -192,10 +194,12 @@ export default async function importItegraProducts({
           })
         );
         allImageUrls.push(...uploaded.map((file) => file.url));
+        urlsForRow = uploaded.map((file) => file.url);
         firstUrlForRow = uploaded[0]?.url;
         logger.info(`${row.sku}: laddade upp ${uploaded.length} bild(er).`);
       } else if (row.image_url) {
         allImageUrls.push(row.image_url);
+        urlsForRow = [row.image_url];
         firstUrlForRow = row.image_url;
       } else {
         logger.warn(`${row.sku}: ingen bild hittad i ${IMAGES_DIR}.`);
@@ -203,6 +207,9 @@ export default async function importItegraProducts({
 
       if (row.color && firstUrlForRow) {
         colorToImageUrl[row.color] = firstUrlForRow;
+      }
+      if (row.color && urlsForRow.length > 0) {
+        colorToImageUrls[row.color] = urlsForRow;
       }
     }
 
@@ -239,7 +246,7 @@ export default async function importItegraProducts({
           stops.push(`${hex} ${start.toFixed(2)}%`);
           stops.push(`${hex} ${end.toFixed(2)}%`);
         });
-        colorMap[row.color] = `linear-gradient(to right, ${stops.join(", ")})`;
+        colorMap[row.color] = `conic-gradient(${stops.join(", ")})`;
       }
     }
 
@@ -270,6 +277,9 @@ export default async function importItegraProducts({
     }
     if (Object.keys(colorToImageUrl).length > 1) {
       metadata.imageMap = colorToImageUrl;
+    }
+    if (Object.keys(colorToImageUrls).length > 1) {
+      metadata.imageGroupMap = colorToImageUrls;
     }
     const manufacturerSkus = groupRows
       .filter((row) => row.manufacturer_sku)
